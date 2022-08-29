@@ -39,12 +39,9 @@ public class Zone : MonoBehaviour {
 
     void FindSpawnObjects() {
         Collider2D[] spawnObjectsFound = Physics2D.OverlapBoxAll(bounds.center, bounds.size, 0, spawnObjectLayers); //LayerMask.NameToLayer("Enemy")
-        Debug.Log("FOUND SPAWN OBJECTS: " + spawnObjectsFound.Length);
-
         // add objects that spawn in the zone to the zoneObjectCache
         // this also moves them away and deactivaets them if they are Enemies.
         for (int i = 0; i < spawnObjectsFound.Length; i++) {
-            Debug.Log(spawnObjectsFound[i].gameObject.name);
             zoneObjectCache.Add(new SpawnObject( spawnObjectsFound[i].gameObject, cacheLocation )); // gets the prefab ref
         }
     }
