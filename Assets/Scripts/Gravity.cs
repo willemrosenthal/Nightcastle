@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Gravity : MonoBehaviour {
     
-    public float gravity;
+    [HideInInspector]public float gravity;
     [HideInInspector]public Controller2D controller;
 
     void Start() {
         gravity = World.gravity;
+    }
+
+    public void Initilize( Controller2D _controller ) {
+        controller = _controller;
     }
 
     public void ApplyGravity(ref Vector2 velocity) {

@@ -44,6 +44,7 @@ public class PlayerAnimation : MonoBehaviour {
             }
         }
         else {
+            if (player.attacking) return;
             // walk
             if (input.x != 0) {
                 PlayAnimation (walk);

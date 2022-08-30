@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour {
         // get potential refs
         health = GetComponent<Health>();
         gravity = GetComponent<Gravity>();
-        if (gravity) gravity.controller = controller;
+        if (gravity) gravity.Initilize(controller);
     }
 
     void Update() {

@@ -106,6 +106,7 @@ public class Player : MonoBehaviour {
         CalculateVelocity();
         HandleWallSliding();
         HandleJumping();
+        HandleAttack();
         DebugInstantReset();
         if (FallHard ()) {
             return;
@@ -125,6 +126,23 @@ public class Player : MonoBehaviour {
         slidingDownMaxSlope = controller.collisions.slidingDownMaxSlope;
 
         animate.HandleAnimations(velocity, directionalInput);
+    }
+
+    public bool attacking = false;
+    void HandleAttack () {
+        if (!attacking) {
+            if (playerInputs.Command.WasPressed && controller.collisions.below) {
+                animate.PlayAnimation(animate.attackStanding);
+                attacking = true;
+                velocity.x = 0;
+            }
+        }
+        if (attacking) {
+            if (!animate.IsPlaying(animate.attackStanding)) attacking = false;
+            velocity.x = 0;
+            if (velocity.y > 0) velocity.y = 0;
+        }
+         
     }
 
     public void OnJumpInputDown() {
@@ -172,6 +190,7 @@ public class Player : MonoBehaviour {
         // movement
         float targetVelocityX = directionalInput.x * moveSpeed;
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
+        Debug.Log(targetVelocityX + " " + velocity.x);
 
         // gravity
         float gravityMultiplier = (!controller.collisions.below && !jumpHeald) ? minJumpGravityMultiplier : 1;

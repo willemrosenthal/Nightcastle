@@ -14,6 +14,8 @@ public class PlayerInputs : PlayerActionSet
 	// keyboard
 	public PlayerAction Space;
 
+	public PlayerAction Command;
+
 	// keyboard
 	public PlayerAction Escape;
 
@@ -91,6 +93,8 @@ public class PlayerInputs : PlayerActionSet
 
 		Space = CreatePlayerAction ("Space");
 
+		Command = CreatePlayerAction ("Command");
+
 		Escape = CreatePlayerAction ("Escape");
 
 		Z = CreatePlayerAction ("Z");
@@ -162,6 +166,8 @@ public class PlayerInputs : PlayerActionSet
 		playerActions.Shift.AddDefaultBinding (Key.Shift);
 
 		playerActions.Space.AddDefaultBinding (Key.Space);
+
+		playerActions.Command.AddDefaultBinding (Key.Command);
 
 		playerActions.Escape.AddDefaultBinding (Key.Backspace);
 		playerActions.Escape.AddDefaultBinding (InputControlType.Minus);
