@@ -14,6 +14,12 @@ public class CameraFollow : MonoBehaviour
     public Bounds zoneBounds;
     
     CameraBounds cameraBounds;
+    GameManager gm;
+
+    void Awake() {
+        gm = GameManager.Instance;
+        gm.cameraFollow = this;
+    }
 
     void Start() {
         cameraBounds = GetComponent<CameraBounds>();
@@ -66,13 +72,8 @@ public class CameraFollow : MonoBehaviour
         lookPos += offset;
     }
 
-    public void SetZoneBounds(Zone newZone) {
-        // if we are in a zone, exit it
-        if (currentZone) currentZone.ExitZone();
-
-        // enter the new zone
-        currentZone = newZone;
-        zoneBounds = currentZone.GetBounds();
+    public void SetZoneBounds(Zone zone) {
+        zoneBounds = zone.GetBounds();
     }
 
     Vector3 AddZDepth (Vector2 pos) {

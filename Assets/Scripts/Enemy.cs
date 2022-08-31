@@ -17,6 +17,11 @@ public class Enemy : MonoBehaviour {
     // jump x velocity
     // ref to player
     // activate when on camera
+
+    // make shake component?
+    public Vector2 hitstopShake = new Vector2(1f,0);
+    int shakeDir = 1;
+
     Vector2 velocity;
 
     // internal values
@@ -64,6 +69,12 @@ public class Enemy : MonoBehaviour {
         // Gravity
         if (gravity) gravity.ApplyGravity(ref velocity);
 
+        // Hitstop
+        if (health.Histop()) {
+            Hitstop();
+            return;
+        }
+
         // where enemy code is written
         EnemyUpdate();
 
@@ -72,6 +83,14 @@ public class Enemy : MonoBehaviour {
 
         // move enemy
         controller.Move(velocity * GTime.deltaTime);
+    }
+
+    public virtual void Hitstop() {
+        if (hitstopShake != Vector2.zero) {
+            Vector2 shakeAmount = hitstopShake * (1f/32f) * (float)shakeDir;
+            shakeDir *= -1;
+            controller.Move(shakeAmount);
+        }
     }
 
     public virtual void EnemyUpdate() {
@@ -138,6 +157,7 @@ public class Enemy : MonoBehaviour {
 
         if (Application.isPlaying) {
             Gizmos.color = Color.red;
+            if (!controller) Debug.Log(this.name);
             Gizmos.DrawWireCube(controller.colliderBox.bounds.center, controller.colliderBox.bounds.size);
         }
     }

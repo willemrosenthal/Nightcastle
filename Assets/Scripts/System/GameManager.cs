@@ -7,12 +7,16 @@ public class GameManager : MonoBehaviour {
     // singleton
 	public static GameManager Instance { get; private set; }
 
+    // current zone
+    Zone currentZone;
+
     // refs
     [HideInInspector] public GameSettings settings;
     [HideInInspector] public InputManager im;
     [HideInInspector] public PlayerInputs playerInputs;
     [HideInInspector] public GameTime time;
     [HideInInspector] public CameraBounds cameraBounds;
+    [HideInInspector] public CameraFollow cameraFollow;
 
     void Awake() {
         // set up as singleton, 
@@ -40,6 +44,14 @@ public class GameManager : MonoBehaviour {
     void Start() {
 
         ConfigureQuality();
+    }
+
+    // zone
+    public void SetCurrentZone(Zone zone) {
+        currentZone = zone;
+    }
+    public Zone GetCurrentZone() {
+        return currentZone;
     }
 
     void ConfigureQuality() {

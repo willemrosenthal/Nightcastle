@@ -104,6 +104,7 @@ public class Controller2D : RaycastController {
 
             collisions.left = directionX == -1;
             collisions.right = directionX == 1;
+            collisions.sideCollisionObject = hit.transform;
             //}
         }
     }
@@ -136,6 +137,7 @@ public class Controller2D : RaycastController {
 
                     collisions.left = directionX == -1;
                     collisions.right = directionX == 1;
+                    collisions.sideCollisionObject = hit.transform;
                 }
             }
         }
@@ -538,6 +540,8 @@ public class Controller2D : RaycastController {
 
         public int fallThoughCloudOk;
 
+        public Transform sideCollisionObject;
+
         public void FallThoughCloud() {
             fallThoughCloudOk = 10; // number of frames to allow falling though a cloud
         }
@@ -555,6 +559,8 @@ public class Controller2D : RaycastController {
 
             slopeAngleOld = slopeAngle;
             slopeAngle = 0;
+
+            sideCollisionObject = null;
 
             if (fallThoughCloudOk > 0) fallThoughCloudOk--;
         }

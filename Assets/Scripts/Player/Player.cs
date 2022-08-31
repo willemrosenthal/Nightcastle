@@ -136,14 +136,14 @@ public class Player : MonoBehaviour {
 
     void HandleAttack () {
         if (state.GetState() != "attack") {
-            if (playerInputs.Command.WasPressed) {
+            if (playerInputs.A.WasPressed) {
                 animate.PlayAnimation(animate.attackStanding);
                 state.EnterState("attack");
                 state.EnterSubstate("hold");
             }
         }
         else {
-            if (playerInputs.Command.WasReleased) {
+            if (playerInputs.A.WasReleased) {
                 state.ExitSubstate();
             }
             if (!animate.IsPlaying(animate.attackStanding) && state.GetSubstate() != "looseWhip") {
@@ -270,12 +270,12 @@ public class Player : MonoBehaviour {
 
     void HandleJumping() {
         // jump
-        if (playerInputs.Space.WasPressed && directionalInput.y < 0) {
+        if (playerInputs.S.WasPressed && directionalInput.y < 0) {
             controller.collisions.FallThoughCloud();
             return;
         }
-        if (playerInputs.Space.WasPressed) OnJumpInputDown();
-        if (playerInputs.Space.WasReleased) OnJumpInputUp();
+        if (playerInputs.S.WasPressed) OnJumpInputDown();
+        if (playerInputs.S.WasReleased) OnJumpInputUp();
         if (velocity.y < 0) jumpHeald = false;
     }
 
@@ -287,6 +287,7 @@ public class Player : MonoBehaviour {
         }
         // enter land state
         if (controller.collisions.below && fallTime > longFallTime) {
+            state.EnterState("land", animate.land.length);
             float fallPower = longFallTime/(fallTime * 1.25f);
             animate.PlayAnimation(animate.land, false, false, fallPower);
             fallTime = 0;

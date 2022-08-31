@@ -29,6 +29,10 @@ public static class Collision {
     public static bool Check(Player a, Controller2D b, bool make2D = true) {
         return Check(a.GetPlayerBounds(), b.colliderBox.bounds, make2D);
     }
+    // player and controller 2D
+    public static bool Check(Player a, Bounds b, bool make2D = true) {
+        return Check(a.GetPlayerBounds(), b, make2D);
+    }
     // controller 2D and player
     public static bool Check(Controller2D a, Player b, bool make2D = true) {
         return Check(b.GetPlayerBounds(), a.colliderBox.bounds, make2D);

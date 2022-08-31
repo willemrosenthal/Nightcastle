@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2636747501074486930}
   - component: {fileID: 790518361526326105}
   - component: {fileID: 8602884423735167157}
+  - component: {fileID: 8795701310769458297}
   m_Layer: 3
   m_Name: Whip
   m_TagString: Untagged
@@ -150,7 +151,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.9, y: 0.109375}
+  m_Offset: {x: 0.5, y: 0.109375}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -161,8 +162,26 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 0.21875}
+  m_Size: {x: 1, y: 0.21875}
   m_EdgeRadius: 0
+--- !u!114 &8795701310769458297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6741571326615607936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90db7d3053e2e484b8d2ef84182f1ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 384
+  damge: 1
+  playerAttack: 1
+  hitParticle: {fileID: 3753944521957515731, guid: b8f43a891261d487ba1d1e8f008fed03, type: 3}
 --- !u!1 &7037626020206646627
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,6 +192,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9174017011150939362}
   - component: {fileID: 3298898117532143371}
+  - component: {fileID: 3810413708821230400}
   m_Layer: 3
   m_Name: WhipHead
   m_TagString: Untagged
@@ -188,7 +208,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7037626020206646627}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.125, y: 0.8125, z: 0}
+  m_LocalPosition: {x: 0.46875, y: 0.8125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5685142871493143903}
@@ -207,7 +227,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.109375}
+  m_Offset: {x: 1.45, y: 0.109375}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -218,8 +238,26 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 0.21875}
+  m_Size: {x: 0.9, y: 0.21875}
   m_EdgeRadius: 0
+--- !u!114 &3810413708821230400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7037626020206646627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90db7d3053e2e484b8d2ef84182f1ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 384
+  damge: 2
+  playerAttack: 1
+  hitParticle: {fileID: 3753944521957515731, guid: b8f43a891261d487ba1d1e8f008fed03, type: 3}
 --- !u!1 &9107793538608196188
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class PlayerInputs : PlayerActionSet
 	public PlayerAction X;
 	public PlayerAction P;
 	public PlayerAction A;
+	public PlayerAction S;
 	public PlayerAction B;
 	
 
@@ -101,6 +102,7 @@ public class PlayerInputs : PlayerActionSet
 		X = CreatePlayerAction ("X");
 		P = CreatePlayerAction ("P");
 		A = CreatePlayerAction ("A");
+		S = CreatePlayerAction ("S");
 		B = CreatePlayerAction ("B");
 
 		ScrollUp = CreatePlayerAction ("Scroll Up");
@@ -183,6 +185,9 @@ public class PlayerInputs : PlayerActionSet
 		playerActions.P.AddDefaultBinding (Key.P);
 
 		playerActions.A.AddDefaultBinding (Key.A);
+
+		playerActions.S.AddDefaultBinding (Key.S);
+
 		playerActions.B.AddDefaultBinding (Key.B);
 
 		playerActions.ScrollUp.AddDefaultBinding (Mouse.PositiveScrollWheel);

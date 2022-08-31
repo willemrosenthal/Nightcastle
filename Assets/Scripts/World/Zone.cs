@@ -22,8 +22,10 @@ public class Zone : MonoBehaviour {
     CameraBounds cameraBounds;
     CameraFollow cameraFollow;
     Player player;
+    GameManager gm;
 
     void Start() {
+        gm = GameManager.Instance;
         player = Player.Instance;
         cameraBounds = Camera.main.GetComponent<CameraBounds>();
         cameraFollow = Camera.main.GetComponent<CameraFollow>();
@@ -65,8 +67,11 @@ public class Zone : MonoBehaviour {
     }
 
     void EnterZone() {
-        Debug.Log("ENTERED NEW ZONE: " + this.name);
         currentZone = true;
+        // exit any zone we are currently in
+        if (gm.GetCurrentZone()) gm.GetCurrentZone().ExitZone();
+        // set current zone in gm
+        gm.SetCurrentZone(this);
         // update camera room bounds
         cameraFollow.SetZoneBounds(this);
 
@@ -91,6 +96,10 @@ public class Zone : MonoBehaviour {
             // add object to current zone objects
             currentZoneObjects.Add(obj);
         }
+    }
+
+    public void AddToZoneObjects(GameObject obj) {
+        currentZoneObjects.Add(obj);
     }
 
     void DestroyObjects() {

@@ -7,6 +7,7 @@ using PowerTools;
 public class WorldObject : MonoBehaviour {
 
     public bool checkCollisionWithPlayer = false;
+    public bool pushable = false;
     Vector2 velocity;
 
     // collisions with player
