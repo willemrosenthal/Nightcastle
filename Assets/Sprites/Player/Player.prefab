@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 1578839686523931019}
   - component: {fileID: 1578839686523931016}
   - component: {fileID: 8402398489666501746}
+  - component: {fileID: 1344835152447693987}
+  - component: {fileID: 1961507786}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -32,7 +34,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578839686523931027}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.181875, y: 8.4375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -181,19 +183,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd5229753d9e049ce995a0a5b76bd9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpHeight: 2.3
-  timeToJumpApex: 0.5
+  jumpHeight: 2.05
+  timeToJumpApex: 0.45
   moveSpeed: 2.5
   minJumpHeight: 1.4
   allowWallJump: 0
-  wallJumpClimb: {x: 4, y: 20}
+  wallJumpClimb: {x: 4, y: 9}
   wallJumpOff: {x: 4, y: 5}
-  wallLeap: {x: 13, y: 16}
+  wallLeap: {x: 8, y: 9}
   wallSlideSpeedMax: 2.5
   wallStickTime: 0.2
   controller: {fileID: 0}
   health: {fileID: 0}
-  attacking: 0
+  state: {fileID: 0}
 --- !u!114 &1578839686523931019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,3 +251,30 @@ MonoBehaviour:
   runContinously: 0
   useParentTransform: 0
   displayGrid: 0
+--- !u!114 &1344835152447693987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578839686523931027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5206028faba045dfb5a2a1eeb2f2274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 
+--- !u!114 &1961507786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578839686523931027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e2859d082054525aa892fdeb4947df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackBox: {fileID: 9107793538608196188, guid: 3203350c8deb24fccb98ed3fe52c4dbf, type: 3}
+  attackTime: 0.25

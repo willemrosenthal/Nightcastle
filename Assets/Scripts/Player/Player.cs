@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent (typeof (Controller2D))]
 [RequireComponent (typeof (Health))]
 [RequireComponent (typeof (PlayerAnimation))]
+[RequireComponent (typeof (State))]
 public class Player : MonoBehaviour {
 
     // singleton
@@ -29,13 +30,17 @@ public class Player : MonoBehaviour {
 
     // wall jump
     public bool allowWallJump = true;
-    public Vector2 wallJumpClimb = new Vector2(4f, 20f);
+    public Vector2 wallJumpClimb = new Vector2(4f, 9f);
     public Vector2 wallJumpOff = new Vector2(4f, 5f);
-    public Vector2 wallLeap = new Vector2(13f, 16f);
+    public Vector2 wallLeap = new Vector2(8f, 9f);
 
     public float wallSlideSpeedMax = 1.5f;
     public float wallStickTime = 0.2f;
     float timeToWallUnstick;
+
+    // whip attack
+    public GameObject whipArm;
+    GameObject spawnedWhipArm;
 
     // gravity and jump internal variables
     float gravity;
@@ -59,6 +64,7 @@ public class Player : MonoBehaviour {
 
     [HideInInspector] public Controller2D controller;
     [HideInInspector] public Health health;
+    [HideInInspector] public State state;
     PlayerAnimation animate;
 
     GameManager gm;
@@ -85,6 +91,7 @@ public class Player : MonoBehaviour {
 	}
 
     void Start() {
+        state = GetComponent<State> ();
         health = GetComponent<Health> ();
         controller = GetComponent<Controller2D> ();
         animate = GetComponent<PlayerAnimation> ();
@@ -107,7 +114,6 @@ public class Player : MonoBehaviour {
         HandleWallSliding();
         HandleJumping();
         HandleAttack();
-        DebugInstantReset();
         if (FallHard ()) {
             return;
         }
@@ -128,21 +134,46 @@ public class Player : MonoBehaviour {
         animate.HandleAnimations(velocity, directionalInput);
     }
 
-    public bool attacking = false;
     void HandleAttack () {
-        if (!attacking) {
-            if (playerInputs.Command.WasPressed && controller.collisions.below) {
+        if (state.GetState() != "attack") {
+            if (playerInputs.Command.WasPressed) {
                 animate.PlayAnimation(animate.attackStanding);
-                attacking = true;
-                velocity.x = 0;
+                state.EnterState("attack");
+                state.EnterSubstate("hold");
             }
         }
-        if (attacking) {
-            if (!animate.IsPlaying(animate.attackStanding)) attacking = false;
-            velocity.x = 0;
-            if (velocity.y > 0) velocity.y = 0;
+        else {
+            if (playerInputs.Command.WasReleased) {
+                state.ExitSubstate();
+            }
+            if (!animate.IsPlaying(animate.attackStanding) && state.GetSubstate() != "looseWhip") {
+                if (state.GetSubstate() == "hold") {
+                    state.EnterSubstate("looseWhip");
+                    animate.PlayAnimation(animate.whipHoldStanding);
+                    // code for entering loose whip state.
+                    spawnedWhipArm = Instantiate(whipArm, transform.position, Quaternion.identity);
+                    spawnedWhipArm.transform.parent = transform;
+                    spawnedWhipArm.transform.localScale = new Vector3(1,1,1);
+                }
+                else {
+                    state.ExitState();
+                }
+            }
+            if (controller.collisions.below) velocity.x = 0;
+            if (velocity.y > 0 && controller.collisions.below) velocity.y = 0;
         }
+
+        // controls for loose whip state
+        if (state.GetState() == "attack" && state.GetSubstate() == "looseWhip") {
+            
+        }
+
+        // delete whip arm
+        if (spawnedWhipArm && state.GetState() != "attack" || state.GetSubstate() != "looseWhip") Destroy(spawnedWhipArm);
          
+    }
+
+    public void SpawnWhipArm() {
     }
 
     public void OnJumpInputDown() {
@@ -190,7 +221,6 @@ public class Player : MonoBehaviour {
         // movement
         float targetVelocityX = directionalInput.x * moveSpeed;
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
-        Debug.Log(targetVelocityX + " " + velocity.x);
 
         // gravity
         float gravityMultiplier = (!controller.collisions.below && !jumpHeald) ? minJumpGravityMultiplier : 1;
@@ -236,11 +266,6 @@ public class Player : MonoBehaviour {
                 timeToWallUnstick = wallStickTime;
             }
         } 
-    }
-
-    void DebugInstantReset() {
-        //Debug.Log (controller.collisions.below);
-        //if (playerInputs.Shift.WasPressed) transform.position = new Vector2(-13.55f, -1.1f); 
     }
 
     void HandleJumping() {

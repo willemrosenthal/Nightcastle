@@ -15,6 +15,7 @@ public class PlayerAnimation : MonoBehaviour {
     public AnimationClip land;
     public AnimationClip run;
     public AnimationClip walk;
+    public AnimationClip whipHoldStanding;
 
     string current;
     Vector2 inputDirection;
@@ -22,11 +23,13 @@ public class PlayerAnimation : MonoBehaviour {
     SpriteAnim anim;
     Player player;
     Controller2D controller;
+    State state;
 
     void Start() {
         player = GetComponent<Player>();
         anim = GetComponent<SpriteAnim>();
         controller = GetComponent<Controller2D>();
+        state = GetComponent<State>();
     }
 
     public void HandleAnimations(Vector2 velocity, Vector2 input) {
@@ -34,26 +37,35 @@ public class PlayerAnimation : MonoBehaviour {
 
         // if airborne
         if (!controller.collisions.below) {
+            // while you are attacking, only do that
+            if (state.GetState() == "attack") return;
+
+            // jump
             if (velocity.y > 0) {
                 PlayAnimation (jump);
                 FaceInputDir();
             }
+            // fall
             else {
                 PlayAnimation (fall);
                 FaceInputDir();
             }
         }
         else {
-            if (player.attacking) return;
+            // while you are attacking, only do that
+            if (state.GetState() == "attack") return;
+
             // walk
             if (input.x != 0) {
                 PlayAnimation (walk);
                 FaceInputDir();
             }
+            // crouch
             else if (input.y < 0) {
                 PlayAnimation (crouch);
                 FaceInputDir();
             }
+            // idle
             else PlayAnimation (idle);
         }
     }
