@@ -128,6 +128,7 @@ public class Player : MonoBehaviour {
         HandleJumping();
         HandleAttack();
         HandleHurt();
+        HandleRun();
         if (FallHard ()) {
             return;
         }
@@ -146,6 +147,32 @@ public class Player : MonoBehaviour {
         slidingDownMaxSlope = controller.collisions.slidingDownMaxSlope;
 
         animate.HandleAnimations(velocity, directionalInput);
+    }
+
+    float runTapTime = 0.1f;
+    float runTapTimer = 0;
+    int runDir;
+    [HideInInspector] public bool runOk;
+    [HideInInspector] public bool longJump;
+    void HandleRun () {
+        runTapTimer -= GTime.deltaTime;
+        if (playerInputs.DpadRight.WasReleased) {
+            runDir = 1;
+            runTapTimer = runTapTime;
+        } 
+        if (playerInputs.DpadLeft.WasReleased) {
+            runDir = -1;
+            runTapTimer = runTapTime;
+        } 
+        if (runDir == 1 && playerInputs.DpadRight.WasPressed && runTapTimer > 0 && controller.collisions.below) {
+            Debug.Log("RUN OK");
+            runOk = true;
+        }
+        else if (runDir == -1 && playerInputs.DpadLeft.WasPressed && runTapTimer > 0 && controller.collisions.below) {
+            Debug.Log("RUN OK");
+            runOk = true;
+        }
+        else runOk = false;
     }
 
     void HandleHurt () {
@@ -249,12 +276,18 @@ public class Player : MonoBehaviour {
             }
         }
         if (controller.collisions.below || coyoteTimer > 0) {
+            coyoteTimer = 0;
             if (controller.collisions.slidingDownMaxSlope) {
                 velocity.y = jumpVelocity * controller.collisions.slopeNormal.y;
                 velocity.x = jumpVelocity * controller.collisions.slopeNormal.x;
             }
             else {
                 velocity.y = jumpVelocity;
+                // long jump
+                if (animate.IsPlaying(animate.run)) {
+                    longJump = true;
+                    velocity.y = jumpVelocity * 0.8f;
+                }
             }
         }
         // jump button starts in a "held" state
@@ -272,8 +305,10 @@ public class Player : MonoBehaviour {
 
     void CalculateVelocity () {
         if (state.GetState() != "hurt") {
+            float runModifier = 1;
+            if (animate.IsPlaying(animate.run) || longJump) runModifier = 2;
             // movement
-            float targetVelocityX = directionalInput.x * moveSpeed;
+            float targetVelocityX = directionalInput.x * moveSpeed * runModifier;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
         }
         // gravity
@@ -323,6 +358,9 @@ public class Player : MonoBehaviour {
     }
 
     void HandleJumping() {
+        // cancel long jump
+        if (controller.collisions.below) longJump = false;
+        
         // jump
         if (playerInputs.S.WasPressed && directionalInput.y < 0) {
             controller.collisions.FallThoughCloud();
@@ -331,6 +369,7 @@ public class Player : MonoBehaviour {
         if (playerInputs.S.WasPressed) OnJumpInputDown();
         if (playerInputs.S.WasReleased) OnJumpInputUp();
         if (velocity.y < 0) jumpHeald = false;
+
     }
 
     bool FallHard() {

@@ -14,6 +14,7 @@ public class PlayerAnimation : MonoBehaviour {
     public AnimationClip hurt;
     public AnimationClip idle;
     public AnimationClip jump;
+    public AnimationClip jumpLong;
     public AnimationClip land;
     public AnimationClip push;
     public AnimationClip run;
@@ -49,7 +50,8 @@ public class PlayerAnimation : MonoBehaviour {
             // jump
             if (velocity.y > 0) {
                 player.state.EnterState("jump");
-                PlayAnimation (jump);
+                if (player.longJump) PlayAnimation(jumpLong);
+                else PlayAnimation (jump);
                 FaceInputDir();
             }
             // fall
@@ -66,6 +68,7 @@ public class PlayerAnimation : MonoBehaviour {
             // walk
             if (input.x != 0) {
                 if (player.push.pushing) PlayAnimation (push);
+                else if (player.runOk || IsPlaying(run)) PlayAnimation(run);
                 else PlayAnimation (walk);
                 player.state.EnterState("walk");
                 FaceInputDir();
