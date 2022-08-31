@@ -33,6 +33,11 @@ public class DeathObject : MonoBehaviour {
             shake *=  (1f/32f);
         }
 
+        // play animation
+        if (anim && clip) {
+            anim.Play(clip);
+        }
+
         // add this to current zone objects
         GameManager.Instance.GetCurrentZone().AddToZoneObjects(this.gameObject);
     }

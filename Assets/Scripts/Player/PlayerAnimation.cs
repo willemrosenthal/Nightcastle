@@ -24,7 +24,7 @@ public class PlayerAnimation : MonoBehaviour {
     string current;
     Vector2 inputDirection;
 
-    SpriteAnim anim;
+    [HideInInspector] public SpriteAnim anim;
     Player player;
     Controller2D controller;
     State state;

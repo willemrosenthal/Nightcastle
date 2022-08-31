@@ -176,6 +176,20 @@ public class Player : MonoBehaviour {
             }
         }
         else {
+            // lets you switch between standing and crouch attack, early in the attack animation
+            if (animate.anim.GetTime() < 0.15f && state.GetSubstate() == "hold" && (animate.IsPlaying(animate.attackStanding) || animate.IsPlaying(animate.attackCrouching))) {
+                float currentAnimationTime = animate.anim.GetTime();
+                if (crouched && directionalInput.y >= 0) {
+                    animate.PlayAnimation(animate.attackStanding);
+                    animate.anim.SetTime(currentAnimationTime);
+                    crouched = false;
+                }
+                else if (!crouched && directionalInput.y < 0) {
+                    animate.PlayAnimation(animate.attackCrouching);
+                    animate.anim.SetTime(currentAnimationTime);
+                    crouched = true;
+                }
+            }
             if (playerInputs.A.WasReleased) {
                 state.ExitSubstate();
             }
