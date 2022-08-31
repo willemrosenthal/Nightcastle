@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
 
     // coyote time
     bool coyoteReady;
-    float coyoteTime = 0.1f;
+    float coyoteTime = 0.13f;
     float coyoteTimer;
 
     // variable jump velocity
@@ -65,6 +65,7 @@ public class Player : MonoBehaviour {
     [HideInInspector] public Controller2D controller;
     [HideInInspector] public Health health;
     [HideInInspector] public State state;
+    [HideInInspector] public PlayerColliderBox playerColliderBox;
     PlayerAnimation animate;
 
     GameManager gm;
@@ -95,6 +96,7 @@ public class Player : MonoBehaviour {
         health = GetComponent<Health> ();
         controller = GetComponent<Controller2D> ();
         animate = GetComponent<PlayerAnimation> ();
+        playerColliderBox = GetComponent<PlayerColliderBox>();
         //controller.SetDistBetweenRays(0.25f); // sets rays super close for player
 
         // calculate gravity based on desired jump height and time
@@ -288,6 +290,7 @@ public class Player : MonoBehaviour {
         // enter land state
         if (controller.collisions.below && fallTime > longFallTime) {
             state.EnterState("land", animate.land.length);
+            playerColliderBox.SetSize("crouch");
             float fallPower = longFallTime/(fallTime * 1.25f);
             animate.PlayAnimation(animate.land, false, false, fallPower);
             fallTime = 0;

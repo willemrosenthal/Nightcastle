@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1578839686523931028}
   - component: {fileID: 1578839686523931031}
   - component: {fileID: 1578839686523931030}
+  - component: {fileID: 5708913426178384169}
   - component: {fileID: 1578839686523931025}
   - component: {fileID: 1578839686523931024}
   - component: {fileID: 1578839686523931019}
@@ -20,6 +21,7 @@ GameObject:
   - component: {fileID: 8402398489666501746}
   - component: {fileID: 1344835152447693987}
   - component: {fileID: 1961507786}
+  - component: {fileID: 6712673859174486717}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -35,7 +37,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578839686523931027}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.181875, y: 8.4375, z: 0}
+  m_LocalPosition: {x: 11.171875, y: 8.4375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,7 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: 390284555
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1276444688708844664, guid: 23d90035bea16473ba965214ca2ea461, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7dfc531c65ea04cda848522fa2c0ea2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -140,8 +142,8 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0.65625}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.38, y: 0}
-    oldSize: {x: 2.78125, y: 1.40625}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 0.65625, y: 1.34375}
     newSize: {x: 0.71875, y: 1.375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -150,6 +152,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.4, y: 1.3125}
   m_EdgeRadius: 0
+--- !u!114 &5708913426178384169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578839686523931027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c6040067f5b4e57b7af89cc2867415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1578839686523931025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,6 +207,7 @@ MonoBehaviour:
   wallLeap: {x: 8, y: 9}
   wallSlideSpeedMax: 2.5
   wallStickTime: 0.2
+  whipArm: {fileID: 1596009393002309834, guid: 15397c71650e34bb1b60bf69163433a8, type: 3}
   controller: {fileID: 0}
   health: {fileID: 0}
   state: {fileID: 0}
@@ -210,8 +225,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   health: 0
+  damageHitPartcile: {fileID: 0}
   deathObject: {fileID: 0}
   looseHealthInvincibilityTime: 0.5
+  histopTime: 0
 --- !u!114 &1578839686523931016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,6 +249,7 @@ MonoBehaviour:
   land: {fileID: 7400000, guid: 144281a75794f40bd8c07023354944f5, type: 2}
   run: {fileID: 0}
   walk: {fileID: 7400000, guid: e8d145041f22845f0aab000706ae63ba, type: 2}
+  whipHoldStanding: {fileID: 7400000, guid: 97cce516c855240aa83f4434f09cf196, type: 2}
 --- !u!114 &8402398489666501746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,6 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 
+  substate: none
 --- !u!114 &1961507786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,3 +297,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackBox: {fileID: 9107793538608196188, guid: 3203350c8deb24fccb98ed3fe52c4dbf, type: 3}
   attackTime: 0.25
+--- !u!114 &6712673859174486717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578839686523931027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f18ebcf6262874a7181005bffb2617f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0

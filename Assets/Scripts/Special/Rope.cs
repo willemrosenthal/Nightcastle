@@ -8,6 +8,7 @@ public class Rope : MonoBehaviour {
     public Material lineMaterial;
     public Sprite segmentSprite;
     public Sprite endSprite;
+    public GameObject endOject;
     public string sortLayer = "Gameplay";
     public int startingSort = 0;
     public bool drawSegmentSprites = true;
@@ -193,8 +194,17 @@ public class Rope : MonoBehaviour {
     void MakeSegmentSprites() {
         for (int i = 0; i < numSegments; i++) {
             SpriteRenderer segSr = new GameObject().AddComponent<SpriteRenderer>();
-            if (i == numSegments-1 && endSprite) segSr.sprite = endSprite;
-            else segSr.sprite = segmentSprite;
+            segSr.sprite = segmentSprite;
+            // end of whip
+            if (i == numSegments-1) {
+                if (endSprite) {
+                    segSr.sprite = endSprite;
+                }
+                if (endOject) {
+                    Transform t = Instantiate(endOject, segSr.transform.position, Quaternion.identity).transform;
+                    t.parent = segSr.transform;
+                }
+            } 
             segSr.sortingLayerName = sortLayer;
             segSr.sortingOrder = startingSort + i;
             segmentSprites.Add (segSr.transform);

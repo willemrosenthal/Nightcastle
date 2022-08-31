@@ -179,9 +179,10 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 384
-  damge: 1
+  damge: 3
   playerAttack: 1
   hitParticle: {fileID: 3753944521957515731, guid: b8f43a891261d487ba1d1e8f008fed03, type: 3}
+  minRehitWait: 0.33
 --- !u!1 &7037626020206646627
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,9 +256,10 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 384
-  damge: 2
+  damge: 5
   playerAttack: 1
   hitParticle: {fileID: 3753944521957515731, guid: b8f43a891261d487ba1d1e8f008fed03, type: 3}
+  minRehitWait: 0.33
 --- !u!1 &9107793538608196188
 GameObject:
   m_ObjectHideFlags: 0

@@ -42,11 +42,13 @@ public class PlayerAnimation : MonoBehaviour {
 
             // jump
             if (velocity.y > 0) {
+                player.state.EnterState("jump");
                 PlayAnimation (jump);
                 FaceInputDir();
             }
             // fall
             else {
+                player.state.EnterState("fall");
                 PlayAnimation (fall);
                 FaceInputDir();
             }
@@ -57,16 +59,22 @@ public class PlayerAnimation : MonoBehaviour {
 
             // walk
             if (input.x != 0) {
+                player.state.EnterState("walk");
                 PlayAnimation (walk);
                 FaceInputDir();
             }
             // crouch
             else if (input.y < 0) {
+                player.state.EnterState("crouch");
+                player.playerColliderBox.SetSize("crouch");
                 PlayAnimation (crouch);
                 FaceInputDir();
             }
             // idle
-            else PlayAnimation (idle);
+            else {
+                player.state.EnterState("idle");
+                PlayAnimation (idle);
+            }
         }
     }
 

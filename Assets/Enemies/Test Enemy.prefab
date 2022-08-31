@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0f0e1eb254b470a8282ad4b1b643ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
+  maxHealth: 5
   health: 0
   damageHitPartcile: {fileID: 9221702447277797865, guid: 18bd1d19121234d5995c5e7d7dfb5d71, type: 3}
   deathObject: {fileID: 8936724743193652269, guid: b6385a308fc164ebc9855f946c2728b4, type: 3}

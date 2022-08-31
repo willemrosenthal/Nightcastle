@@ -215,6 +215,7 @@ MonoBehaviour:
   lineMaterial: {fileID: 0}
   segmentSprite: {fileID: -257364425004984454, guid: efdcc5fc62ab647b0bb01e5919517141, type: 3}
   endSprite: {fileID: 7845558827011228611, guid: efdcc5fc62ab647b0bb01e5919517141, type: 3}
+  endOject: {fileID: 4874630026888912033, guid: a02b0fe99ce534218bd729a5d0156d0b, type: 3}
   sortLayer: Gameplay
   startingSort: 2
   drawSegmentSprites: 1
@@ -223,7 +224,6 @@ MonoBehaviour:
   simulatonAccuracy: 50
   totalSegments: 13
   segmentDistance: 0.093
-  volitility: 10
   gravity: {x: 0, y: -0.6}
   attachEndOneToMouse: 0
   endOneAttach: {fileID: 6776880948066835426}

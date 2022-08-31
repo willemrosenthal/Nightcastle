@@ -25,7 +25,7 @@ public class CameraFollow : MonoBehaviour
         cameraBounds = GetComponent<CameraBounds>();
     }
 
-    void LateUpdate() {
+    public void CameraUpdate() {
         // makes sure bounds are up to date
         cameraBounds.UpdateBounds();
 
