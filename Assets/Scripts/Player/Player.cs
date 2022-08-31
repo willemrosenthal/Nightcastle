@@ -69,6 +69,7 @@ public class Player : MonoBehaviour {
     [HideInInspector] public State state;
     [HideInInspector] public PlayerColliderBox playerColliderBox;
     [HideInInspector] public PlayerAnimation animate;
+    [HideInInspector] public Push push;
 
     GameManager gm;
     PlayerInputs playerInputs;
@@ -100,6 +101,7 @@ public class Player : MonoBehaviour {
         controller = GetComponent<Controller2D> ();
         animate = GetComponent<PlayerAnimation> ();
         playerColliderBox = GetComponent<PlayerColliderBox>();
+        push = GetComponent<Push>();
         sr = GetComponent<SpriteRenderer>();
         //controller.SetDistBetweenRays(0.25f); // sets rays super close for player
 

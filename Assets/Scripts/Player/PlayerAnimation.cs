@@ -15,6 +15,7 @@ public class PlayerAnimation : MonoBehaviour {
     public AnimationClip idle;
     public AnimationClip jump;
     public AnimationClip land;
+    public AnimationClip push;
     public AnimationClip run;
     public AnimationClip walk;
     public AnimationClip whipHoldCrouching;
@@ -64,8 +65,9 @@ public class PlayerAnimation : MonoBehaviour {
 
             // walk
             if (input.x != 0) {
+                if (player.push.pushing) PlayAnimation (push);
+                else PlayAnimation (walk);
                 player.state.EnterState("walk");
-                PlayAnimation (walk);
                 FaceInputDir();
             }
             // crouch

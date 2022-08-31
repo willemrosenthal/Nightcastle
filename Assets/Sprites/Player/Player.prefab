@@ -216,6 +216,7 @@ MonoBehaviour:
   state: {fileID: 0}
   playerColliderBox: {fileID: 0}
   animate: {fileID: 0}
+  push: {fileID: 0}
 --- !u!114 &1578839686523931019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +233,7 @@ MonoBehaviour:
   health: 0
   damageHitPartcile: {fileID: 0}
   deathObject: {fileID: 0}
-  looseHealthInvincibilityTime: 1.5
+  looseHealthInvincibilityTime: 1
   histopTime: 0.1
 --- !u!114 &1578839686523931016
 MonoBehaviour:
@@ -254,6 +255,7 @@ MonoBehaviour:
   idle: {fileID: 7400000, guid: 0d6037231378e467f9afb14bbcf39074, type: 2}
   jump: {fileID: 7400000, guid: 6321d929418ba4bfe9cc3030bd85d131, type: 2}
   land: {fileID: 7400000, guid: 144281a75794f40bd8c07023354944f5, type: 2}
+  push: {fileID: 7400000, guid: d23cc615170b944238d2a411f74b48de, type: 2}
   run: {fileID: 0}
   walk: {fileID: 7400000, guid: e8d145041f22845f0aab000706ae63ba, type: 2}
   whipHoldCrouching: {fileID: 7400000, guid: eebf01f3523454030b020b60340dad81, type: 2}
@@ -320,3 +322,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0

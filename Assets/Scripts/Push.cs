@@ -5,6 +5,7 @@ using UnityEngine;
 public class Push : MonoBehaviour {
 
     public bool debug;
+    [HideInInspector] public bool pushing;
     Dictionary<Transform, WorldObject> pushObjectDictionary = new Dictionary<Transform, WorldObject>();
 
     Controller2D controller;
@@ -18,6 +19,10 @@ public class Push : MonoBehaviour {
 
     // happens after normal update, this way we can be confient that side collisions are left intact
     void LateUpdate() {
+        // rest
+        pushing = false;
+
+        // check if pushing
         if (controller.collisions.left || controller.collisions.right) {
             if (debug) Debug.Log("pushing: " + controller.collisions.sideCollisionObject.name);
             if (!pushObjectDictionary.ContainsKey(controller.collisions.sideCollisionObject)) {
@@ -25,6 +30,8 @@ public class Push : MonoBehaviour {
             }
             WorldObject pushableObj = pushObjectDictionary[controller.collisions.sideCollisionObject];
             if (pushableObj && pushableObj.pushable && controller.collisions.below) {
+                // we are pushing something
+                pushing = true;
                 Vector2 pushVelocity = controller.collisions.left ? new Vector2(-1,-0.1f) :  new Vector2(1,-.1f);
                 pushableObj.controller.Move(pushVelocity * GTime.deltaTime);
                 // play push sound refercend in the WorldObject

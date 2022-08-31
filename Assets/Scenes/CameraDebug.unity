@@ -384,6 +384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1 &94198195
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,6 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1001 &147663913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -866,6 +868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!114 &197613523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1397,6 +1400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1 &346637774
 GameObject:
   m_ObjectHideFlags: 0
@@ -3141,6 +3145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 1
+  pushing: 0
 --- !u!1001 &800828075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3639,6 +3644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1 &875113557
 GameObject:
   m_ObjectHideFlags: 0
@@ -4020,6 +4026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1001 &961565702
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5026,6 +5033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1 &1116313421
 GameObject:
   m_ObjectHideFlags: 0
@@ -5211,6 +5219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1 &1166063652
 GameObject:
   m_ObjectHideFlags: 0
@@ -5561,6 +5570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1 &1190221932
 GameObject:
   m_ObjectHideFlags: 0
@@ -6566,6 +6576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1 &1427272513
 GameObject:
   m_ObjectHideFlags: 0
@@ -21940,6 +21951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  pushing: 0
 --- !u!1001 &2071950802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22065,10 +22077,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1578839686523931019, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: looseHealthInvincibilityTime
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931027, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_Name
       value: Player
