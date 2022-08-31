@@ -39,7 +39,9 @@ public class Player : MonoBehaviour {
     float timeToWallUnstick;
 
     // whip attack
+    bool crouched;
     public GameObject whipArm;
+    public GameObject whipArmCrouched;
     GameObject spawnedWhipArm;
 
     // gravity and jump internal variables
@@ -66,10 +68,11 @@ public class Player : MonoBehaviour {
     [HideInInspector] public Health health;
     [HideInInspector] public State state;
     [HideInInspector] public PlayerColliderBox playerColliderBox;
-    PlayerAnimation animate;
+    [HideInInspector] public PlayerAnimation animate;
 
     GameManager gm;
     PlayerInputs playerInputs;
+    SpriteRenderer sr;
 
     void Awake() {
         // singleton and if a duplicate, end code here
@@ -97,6 +100,7 @@ public class Player : MonoBehaviour {
         controller = GetComponent<Controller2D> ();
         animate = GetComponent<PlayerAnimation> ();
         playerColliderBox = GetComponent<PlayerColliderBox>();
+        sr = GetComponent<SpriteRenderer>();
         //controller.SetDistBetweenRays(0.25f); // sets rays super close for player
 
         // calculate gravity based on desired jump height and time
@@ -112,10 +116,16 @@ public class Player : MonoBehaviour {
         // get directional input
         directionalInput = playerInputs.Dpad;
 
+        // invincibility
+        if (health.IsInvincible() && state.GetState() != "hurt") {
+            sr.enabled = !sr.enabled;
+        } else sr.enabled = true;
+
         CalculateVelocity();
         HandleWallSliding();
         HandleJumping();
         HandleAttack();
+        HandleHurt();
         if (FallHard ()) {
             return;
         }
@@ -136,10 +146,29 @@ public class Player : MonoBehaviour {
         animate.HandleAnimations(velocity, directionalInput);
     }
 
+    void HandleHurt () {
+        if (health.Histop() && state.GetState() != "hurt") {
+            state.EnterState("hurt");
+            velocity = new Vector2 (transform.localScale.x * -2, jumpVelocity * 0.65f);
+            animate.PlayAnimation(animate.hurt);
+        }
+    }
+
     void HandleAttack () {
+        // things that prevent you from attacking
+        if (state.GetState() == "land" || state.GetState() == "hurt" ) return;
+
         if (state.GetState() != "attack") {
             if (playerInputs.A.WasPressed) {
-                animate.PlayAnimation(animate.attackStanding);
+                if (state.GetState() == "crouch") {
+                    crouched = true;
+                    animate.PlayAnimation(animate.attackCrouching);
+                    playerColliderBox.SetSize("crouch");
+                }
+                else {
+                    crouched = false;
+                    animate.PlayAnimation(animate.attackStanding);
+                }
                 state.EnterState("attack");
                 state.EnterSubstate("hold");
             }
@@ -148,12 +177,18 @@ public class Player : MonoBehaviour {
             if (playerInputs.A.WasReleased) {
                 state.ExitSubstate();
             }
-            if (!animate.IsPlaying(animate.attackStanding) && state.GetSubstate() != "looseWhip") {
+            if (!animate.IsPlaying(animate.attackStanding) && !animate.IsPlaying(animate.attackCrouching) && state.GetSubstate() != "looseWhip") {
                 if (state.GetSubstate() == "hold") {
                     state.EnterSubstate("looseWhip");
-                    animate.PlayAnimation(animate.whipHoldStanding);
+                    if (crouched) {
+                        animate.PlayAnimation(animate.whipHoldCrouching);
+                        spawnedWhipArm = Instantiate(whipArmCrouched, transform.position, Quaternion.identity);
+                    }
+                    else {
+                        animate.PlayAnimation(animate.whipHoldStanding);
+                        spawnedWhipArm = Instantiate(whipArm, transform.position, Quaternion.identity);
+                    }
                     // code for entering loose whip state.
-                    spawnedWhipArm = Instantiate(whipArm, transform.position, Quaternion.identity);
                     spawnedWhipArm.transform.parent = transform;
                     spawnedWhipArm.transform.localScale = new Vector3(1,1,1);
                 }
@@ -220,10 +255,11 @@ public class Player : MonoBehaviour {
 
 
     void CalculateVelocity () {
-        // movement
-        float targetVelocityX = directionalInput.x * moveSpeed;
-        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
-
+        if (state.GetState() != "hurt") {
+            // movement
+            float targetVelocityX = directionalInput.x * moveSpeed;
+            velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
+        }
         // gravity
         float gravityMultiplier = (!controller.collisions.below && !jumpHeald) ? minJumpGravityMultiplier : 1;
         velocity.y += gravity * GTime.deltaTime * gravityMultiplier;

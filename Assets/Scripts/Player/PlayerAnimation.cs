@@ -7,14 +7,17 @@ using PowerTools;
 [RequireComponent (typeof (SpriteAnim))]
 public class PlayerAnimation : MonoBehaviour {
 
+    public AnimationClip attackCrouching;
     public AnimationClip attackStanding;
     public AnimationClip crouch;
     public AnimationClip fall;
+    public AnimationClip hurt;
     public AnimationClip idle;
     public AnimationClip jump;
     public AnimationClip land;
     public AnimationClip run;
     public AnimationClip walk;
+    public AnimationClip whipHoldCrouching;
     public AnimationClip whipHoldStanding;
 
     string current;
@@ -37,6 +40,8 @@ public class PlayerAnimation : MonoBehaviour {
 
         // if airborne
         if (!controller.collisions.below) {
+            // while being hurt, do nothing
+            if (state.GetState() == "hurt") return;
             // while you are attacking, only do that
             if (state.GetState() == "attack") return;
 

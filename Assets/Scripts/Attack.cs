@@ -6,7 +6,7 @@ using PowerTools;
 public class Attack : MonoBehaviour {
 
     // attack hitbox
-    public GameObject attackBox;
+    public GameObject[] attackBoxs;
 
     // length of time hitbox is active
     public float attackTime;
@@ -16,9 +16,9 @@ public class Attack : MonoBehaviour {
     float attackTimer;
 
     // spawns attackbox
-    public void AttackBox() {
+    public void AttackBox(int attackNo = 0) {
         if (currentAttack) Destroy(currentAttack);
-        currentAttack = Instantiate(attackBox, transform.position, Quaternion.identity);
+        currentAttack = Instantiate(attackBoxs[attackNo], transform.position, Quaternion.identity);
         currentAttack.transform.parent = transform;
         currentAttack.transform.localPosition = Vector3.zero;
         currentAttack.transform.localScale = new Vector3(1,1,1);

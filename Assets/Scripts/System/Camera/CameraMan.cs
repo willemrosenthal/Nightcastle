@@ -6,6 +6,8 @@ public class CameraMan : MonoBehaviour {
 
 	public static CameraMan Instance { get; private set; }
 
+    Vector2 playerCameraOffset;
+
     CameraFollow cameraFollow;
     Player player;
 
@@ -32,11 +34,14 @@ public class CameraMan : MonoBehaviour {
         cameraFollow = GameManager.Instance.cameraFollow;
         // set this to the target
         cameraFollow.target = transform;
+
+        // get player bounds offset to center camera on middle of charachter rather than feet
+        playerCameraOffset = player.GetComponent<BoxCollider2D>().bounds.center - player.transform.position;
     }
 
     void LateUpdate() {
         // centers cameraman on player's collider
-        transform.position = player.controller.colliderBox.bounds.center;
+        transform.position = (Vector2)player.transform.position + playerCameraOffset;
 
         // update the camera after the cameraman has done his thing
         cameraFollow.CameraUpdate();

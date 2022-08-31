@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: 390284555
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7dfc531c65ea04cda848522fa2c0ea2d, type: 3}
+  m_Sprite: {fileID: -7626975645689797045, guid: d81ec90c72e1444bd862cc81a9e894fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -142,15 +142,15 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0.65625}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.65625, y: 1.34375}
+    pivot: {x: 0.39, y: 0.32}
+    oldSize: {x: 2.71875, y: 1.5625}
     newSize: {x: 0.71875, y: 1.375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 1.3125}
+  m_Size: {x: 0.35, y: 1.3125}
   m_EdgeRadius: 0
 --- !u!114 &5708913426178384169
 MonoBehaviour:
@@ -164,6 +164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c6040067f5b4e57b7af89cc2867415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normal: {x: 0.35, y: 1.3125}
+  crouch: {x: 0.35, y: 0.75}
 --- !u!114 &1578839686523931025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,9 +210,12 @@ MonoBehaviour:
   wallSlideSpeedMax: 2.5
   wallStickTime: 0.2
   whipArm: {fileID: 1596009393002309834, guid: 15397c71650e34bb1b60bf69163433a8, type: 3}
+  whipArmCrouched: {fileID: 1596009393002309834, guid: 8be884f6b14e84acfbee6d26da187b0b, type: 3}
   controller: {fileID: 0}
   health: {fileID: 0}
   state: {fileID: 0}
+  playerColliderBox: {fileID: 0}
+  animate: {fileID: 0}
 --- !u!114 &1578839686523931019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,8 +232,8 @@ MonoBehaviour:
   health: 0
   damageHitPartcile: {fileID: 0}
   deathObject: {fileID: 0}
-  looseHealthInvincibilityTime: 0.5
-  histopTime: 0
+  looseHealthInvincibilityTime: 1.5
+  histopTime: 0.1
 --- !u!114 &1578839686523931016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,14 +246,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c617dff3c0df475ebc523365312f1cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackCrouching: {fileID: 7400000, guid: e39971a4ce5684c149e47a1e9912b5bf, type: 2}
   attackStanding: {fileID: 7400000, guid: a0494f3c7d5ed44728b39ce6ba738f09, type: 2}
   crouch: {fileID: 7400000, guid: c4b455a957b9f40ddaacbe100dc2a61d, type: 2}
   fall: {fileID: 7400000, guid: 81a3173d5b5eb4a7f94df7966fcc39fd, type: 2}
+  hurt: {fileID: 7400000, guid: 702182961ef9e4e2285f8296afd98269, type: 2}
   idle: {fileID: 7400000, guid: 0d6037231378e467f9afb14bbcf39074, type: 2}
   jump: {fileID: 7400000, guid: 6321d929418ba4bfe9cc3030bd85d131, type: 2}
   land: {fileID: 7400000, guid: 144281a75794f40bd8c07023354944f5, type: 2}
   run: {fileID: 0}
   walk: {fileID: 7400000, guid: e8d145041f22845f0aab000706ae63ba, type: 2}
+  whipHoldCrouching: {fileID: 7400000, guid: eebf01f3523454030b020b60340dad81, type: 2}
   whipHoldStanding: {fileID: 7400000, guid: 97cce516c855240aa83f4434f09cf196, type: 2}
 --- !u!114 &8402398489666501746
 MonoBehaviour:
@@ -295,7 +303,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e2859d082054525aa892fdeb4947df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackBox: {fileID: 9107793538608196188, guid: 3203350c8deb24fccb98ed3fe52c4dbf, type: 3}
+  attackBoxs:
+  - {fileID: 9107793538608196188, guid: 3203350c8deb24fccb98ed3fe52c4dbf, type: 3}
+  - {fileID: 9107793538608196188, guid: 12cf58f79d0b042d4ab30d04b96701df, type: 3}
   attackTime: 0.25
 --- !u!114 &6712673859174486717
 MonoBehaviour:

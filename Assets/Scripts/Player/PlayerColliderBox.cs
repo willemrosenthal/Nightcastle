@@ -32,7 +32,12 @@ public class PlayerColliderBox : MonoBehaviour
     }
 
     void Update() {
-        if (player.state.GetState() != "crouch" && player.state.GetState() != "land") {
+        // when to remain in crouch size
+        if (player.state.GetState() != "crouch" &&
+            player.state.GetState() != "land" &&
+            !player.animate.IsPlaying(player.animate.attackCrouching) &&
+            !player.animate.IsPlaying(player.animate.whipHoldCrouching)
+            ){
             SetSize();
         }
     }
