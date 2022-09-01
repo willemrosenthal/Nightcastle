@@ -68,7 +68,7 @@ public class PlayerAnimation : MonoBehaviour {
             // walk
             if (input.x != 0) {
                 if (player.push.pushing) PlayAnimation (push);
-                else if (player.runOk || IsPlaying(run)) PlayAnimation(run);
+                else if ((player.runOk || IsPlaying(run)) && !player.controller.collisions.left && !player.controller.collisions.right) PlayAnimation(run);
                 else PlayAnimation (walk);
                 player.state.EnterState("walk");
                 FaceInputDir();

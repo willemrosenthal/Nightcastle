@@ -164,11 +164,11 @@ public class Player : MonoBehaviour {
             runDir = -1;
             runTapTimer = runTapTime;
         } 
-        if (runDir == 1 && playerInputs.DpadRight.WasPressed && runTapTimer > 0 && controller.collisions.below) {
+        if (runDir == 1 && playerInputs.DpadRight.IsPressed && runTapTimer > 0 && controller.collisions.below) {
             Debug.Log("RUN OK");
             runOk = true;
         }
-        else if (runDir == -1 && playerInputs.DpadLeft.WasPressed && runTapTimer > 0 && controller.collisions.below) {
+        else if (runDir == -1 && playerInputs.DpadLeft.IsPressed && runTapTimer > 0 && controller.collisions.below) {
             Debug.Log("RUN OK");
             runOk = true;
         }
@@ -286,7 +286,7 @@ public class Player : MonoBehaviour {
                 // long jump
                 if (animate.IsPlaying(animate.run)) {
                     longJump = true;
-                    velocity.y = jumpVelocity * 0.8f;
+                    velocity.y = jumpVelocity * 0.85f;
                 }
             }
         }
@@ -359,8 +359,15 @@ public class Player : MonoBehaviour {
 
     void HandleJumping() {
         // cancel long jump
-        if (controller.collisions.below) longJump = false;
-        
+        if (controller.collisions.below && longJump) {
+            longJump = false;
+            // lets you continue with a run after landing
+            if (directionalInput.x != 0 && runDir == Mathf.Sign(directionalInput.x)) {
+                runOk = true;
+                runTapTimer = runTapTime;
+            }
+        }
+
         // jump
         if (playerInputs.S.WasPressed && directionalInput.y < 0) {
             controller.collisions.FallThoughCloud();
