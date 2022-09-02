@@ -25,6 +25,7 @@ public class PlayerInputs : PlayerActionSet
 	public PlayerAction P;
 	public PlayerAction A;
 	public PlayerAction S;
+	public PlayerAction D;
 	public PlayerAction B;
 	
 
@@ -103,6 +104,7 @@ public class PlayerInputs : PlayerActionSet
 		P = CreatePlayerAction ("P");
 		A = CreatePlayerAction ("A");
 		S = CreatePlayerAction ("S");
+		D = CreatePlayerAction ("D");
 		B = CreatePlayerAction ("B");
 
 		ScrollUp = CreatePlayerAction ("Scroll Up");
@@ -180,13 +182,14 @@ public class PlayerInputs : PlayerActionSet
 
 		playerActions.X.AddDefaultBinding (Key.X);
 		playerActions.X.AddDefaultBinding (Key.E);
-		playerActions.X.AddDefaultBinding (Key.D);
 
 		playerActions.P.AddDefaultBinding (Key.P);
 
 		playerActions.A.AddDefaultBinding (Key.A);
 
 		playerActions.S.AddDefaultBinding (Key.S);
+
+		playerActions.D.AddDefaultBinding (Key.D);
 
 		playerActions.B.AddDefaultBinding (Key.B);
 
