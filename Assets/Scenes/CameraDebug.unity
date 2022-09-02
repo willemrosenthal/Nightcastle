@@ -1888,9 +1888,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98e7c7344e0724fc0b89fa3233a7031d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: AA BB CC DD EE FFFFFF GGGG HHH IIIIIIII JJJJJJ KKKK LLLLL MMM NN OOOOO PPPP
-    QQQQ RRRR SSSS TTTTTT UUU VVVV WWW XXXX YYY ZZZ
-  font: Dialouge_English-A
+  text: "What a horrible night for a curse...\nThisn is why I hate \nnights!"
+  font: Dialouge_English-B
   maxLinePxSize: 224
   state: ready
   textToWrite: 

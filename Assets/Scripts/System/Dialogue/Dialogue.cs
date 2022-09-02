@@ -109,10 +109,11 @@ public class Dialogue : MonoBehaviour
         float _lineWidth = 0;
         string _textToTest = "";
 
-        while (_textToTest.Length < textToWrite.Length && _lineWidth < maxLineSize) {
+        while (_lineWidth < maxLineSize) {
             _textToTest += textToWrite[_current];
             _lineWidth = testLine.GetLineWidth(_textToTest);
             if (textToWrite[_current] + "" == " ") _lastSpace = _current;
+            Debug.Log(textToWrite[_current].ToString() == "\n");
             _current++;
 
             // if we exceed the line size
@@ -121,12 +122,20 @@ public class Dialogue : MonoBehaviour
                 textToWrite = textToWrite.Substring(_lastSpace+1);
                 break;
             }
+            // if line break
+            else if (textToWrite[_current-1].ToString() == "\n") {
+                currentLine = textToWrite.Substring(0, _current-1);
+                if (textToWrite.Length > _current+1) textToWrite = textToWrite.Substring(_current+1);
+                else textToWrite = "";
+                break;
+            }
             // if we finished
             else if (_textToTest.Length == textToWrite.Length) {
                 currentLine = textToWrite;
                 textToWrite = "";
                 break;
             }
+
         }
     }
 
