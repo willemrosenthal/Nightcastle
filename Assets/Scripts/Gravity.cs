@@ -11,10 +11,11 @@ public class Gravity : MonoBehaviour {
 
     void Start() {
         gravity = World.gravity;
+        controller = GetComponent<Controller2D>();
+        Initilize();
     }
 
-    public void Initilize( Controller2D _controller ) {
-        controller = _controller;
+    public void Initilize() {
         if (snapToGroundOnStart) {
             controller.Move(Vector2.down * 5);
         }

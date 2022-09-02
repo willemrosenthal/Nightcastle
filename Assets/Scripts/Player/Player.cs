@@ -172,6 +172,7 @@ public class Player : MonoBehaviour {
             Debug.Log("RUN OK");
             runOk = true;
         }
+        //else if (runOk && ((runDir == -1 && playerInputs.DpadLeft.IsPressed) || (runDir == 1 && playerInputs.DpadRight.IsPressed)) && state.GetState() == "fall") runOk = true;
         else runOk = false;
     }
 

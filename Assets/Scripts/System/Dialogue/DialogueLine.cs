@@ -11,7 +11,7 @@ public class DialogueLine : MonoBehaviour {
     public bool complete { get; private set; }
     public bool writing { get; private set; }
     float timer;
-    float letterTime = 0.012f;
+    float letterTime = 0.03f;
 
     public TextMesh text;
     public Renderer textRenderer;
@@ -52,11 +52,13 @@ public class DialogueLine : MonoBehaviour {
         if (useDropShadow) dropShadow.enabled = true;
     }
 
-    public void Interrupt() {
+    public bool Interrupt() {
         if (writing) {
             line = line.Substring(0, currentChar);
             line += "-";
+            return true;
         }
+        return false;
     }
 
     public void Hide() {
