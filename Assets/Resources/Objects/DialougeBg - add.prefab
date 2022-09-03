@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 982018832474882458}
   - component: {fileID: 982018832474882459}
   m_Layer: 8
-  m_Name: DialougeBg
+  m_Name: DialougeBg - add
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,7 +50,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 02d4e4daf798040348a133950c07d7d8, type: 2}
+  - {fileID: 2100000, guid: 3fafc365782f74cc597610ac6924c928, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Zone : MonoBehaviour {
 
+    public string zoneName = "";
     public LayerMask spawnObjectLayers;
 
     public float width;

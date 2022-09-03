@@ -24,6 +24,7 @@ public static class WorldTime {
         hours = TimeSpan.FromSeconds(elapsedWorldTime).Hours;     //(int)(elapsedWorldTime / 3600f); 
     }
 
+    // ONLY USED FOR CLOCK and player-facing stuff. Interally, the game uses time since start.
     public static float GetTimeOfDayHours () {
         return Mathf.Floor(worldTimeStart + hours);
     }
@@ -33,6 +34,13 @@ public static class WorldTime {
     }
     public static float GetTimeOfDaySeconds () {
         return seconds;
+    }
+
+    // checks if a given hour value (with decimal for min) has passed. I.E. 3.5 = has it been 3.5 hours since the game started?
+    public static bool After (float _hours) {
+        float hrs = Mathf.Floor(_hours);
+        float min = Mathf.Floor((_hours - hrs) * 60);
+        return (hours >= hrs) && (minutes >= min);
     }
 
 }

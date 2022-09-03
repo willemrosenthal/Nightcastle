@@ -7,8 +7,10 @@ using PowerTools;
 [RequireComponent (typeof (Controller2D))]
 [RequireComponent (typeof (SpriteAnim))]
 [RequireComponent (typeof (Health))]
-public class NPC : MonoBehaviour
-{
+public class NPC : MonoBehaviour {
+    // data for tracking NPC
+    public string npc = "Jimmy";
+
     [TextArea] public string text = "";
     [TextArea] public string hitText = "";
     bool talking;
@@ -35,6 +37,16 @@ public class NPC : MonoBehaviour
     Health health;
     Animator animator;
 
+    void Awake() {
+        CheckIfALive();
+    }
+
+    void CheckIfALive() {
+        if (!PersistantData.CheckIfAlive(npc)) {
+            Destroy(this.gameObject);
+        }
+    }
+
     void Start() {
         health = GetComponent<Health>();
         currentHealth = health.health;
@@ -44,6 +56,8 @@ public class NPC : MonoBehaviour
         playerInputs = GameManager.Instance.playerInputs;
 
         if (anim && idle) anim.Play(idle);
+
+        if (facePlayer) FacePlayer();
     }
 
     void Update() {
@@ -97,7 +111,9 @@ public class NPC : MonoBehaviour
 
     void OnDestroy() {
         // if it dies from being killed rather than despawning, then do death talk
-        if (health.health <= 0) {
+        if (health && health.health <= 0) {
+            // add to list of dead NPCS
+            PersistantData.AddDeadNPC(npc);
             if (talking) {
                 dialogue.Interrupt();
             }

@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remakeShadow: 0
-  fontColor: {r: 1, g: 1, b: 1, a: 1}
+  fontColor: {r: 0.8867924, g: 0.8867924, b: 0.8867924, a: 1}
   shadowColor: {r: 0, g: 0, b: 0, a: 1}
   otherColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   otherColor2: {r: 0, g: 0, b: 0, a: 1}
