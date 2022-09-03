@@ -30,7 +30,7 @@ public class DialogueLine : MonoBehaviour {
     }
 
     void Write() {
-        timer -= GTime.deltaTime;
+        timer -= GTime.unscaledDeltaTime;
         if (timer < 0) {
             text.text += line[currentChar];
             currentChar++;

@@ -142,6 +142,7 @@ public class MakeDropShadow : MonoBehaviour {
 
         /// keep in correct posiiton
         shadowHolder.transform.position = transform.position;
+        shadowHolder.transform.localScale = transform.localScale;
     }
 
     void OnDestroy() {

@@ -7,12 +7,16 @@ public static class Dialogue {
     public static bool inDialogue;
     public static DialogueText dialogue;
 
-    public static DialogueText NewDialogue (string textToSay) {
-        if (DialogueText.Instance != null) return null;
+    public static DialogueText NewDialogue (string textToSay, bool blocking = true) {
+        if (DialogueText.Instance != null) {
+            EndDialogue();
+            //Debug.Log("dialouge already in progress");
+            //return null;
+        }
 
         GameObject newDialogue = new GameObject();
         dialogue = newDialogue.AddComponent<DialogueText>();
-        dialogue.Initilize(textToSay);
+        dialogue.Initilize(textToSay, blocking);
         return dialogue;
     }
 

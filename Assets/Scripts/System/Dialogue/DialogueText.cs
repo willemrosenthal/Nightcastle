@@ -26,6 +26,17 @@ public class DialogueText : MonoBehaviour {
     float scrollLineTimer;
     float scrollLineTime = 0.2f;
 
+    // line time
+    float lineTimer = 0;
+    float lineTime = 1;
+
+    // text bg
+    GameObject textBg;
+    SpriteRenderer textBgRenderer;
+    float bgAppearTime = 0.65f;
+    float bgAppearTimer = 0;
+    
+
     // interrupt
     bool interrupted;
     float interruptTimer = 0;
@@ -65,7 +76,7 @@ public class DialogueText : MonoBehaviour {
         transform.localPosition = new Vector3(0,0,10);
     }
 
-    public void Initilize(string textToSay) {
+    public void Initilize(string textToSay, bool blocking = true) {
         // build line tester
         LineTeter();
 
@@ -79,6 +90,20 @@ public class DialogueText : MonoBehaviour {
 
         // get ready
         state = "ready";
+
+        // if blocking
+        if (blocking) {
+            TextBg();
+            GTime.timeScale = 0;
+            state = "createBackground";
+        }
+    }
+
+    void TextBg () {
+        string pathToFont = "Objects/DialougeBg";
+		textBg = Instantiate((GameObject)Resources.Load(pathToFont, typeof(GameObject)), transform.position + Vector3.down * 2.5f, Quaternion.identity);
+        textBg.transform.parent = transform;
+        textBgRenderer = textBg.GetComponent<SpriteRenderer>();
     }
 
     void LineTeter() {
@@ -89,17 +114,28 @@ public class DialogueText : MonoBehaviour {
     }
 
     void Update() {
-        if (state == "ready") {
+        if (state == "createBackground") {
+            float bgPercent = bgAppearTimer/bgAppearTime;
+            if (bgPercent >= 1) state = "ready";
+            textBgRenderer.material.SetFloat("_Cutoff", Mathf.Clamp(1f-bgPercent, 0, 1));
+            bgAppearTimer += GTime.unscaledDeltaTime;
+        }
+        else if (state == "ready") {
             GetLine();
             CreateLine();
             state = "writing";
         }
         else if (state == "writing") {
             if (lines[0].complete) {
-                if (playerInputs.D.WasPressed) {
-                    state = "next";
-                }
+                state = "writingComplete";
+                lineTimer = lineTime;
             }  
+        }
+        else if (state == "writingComplete") {
+            lineTimer -= GTime.unscaledDeltaTime;
+            if (playerInputs.D.WasPressed || lineTimer < 0) {
+                state = "next";
+            } 
         }
         else if (state == "next") {
             if (textToWrite.Length == 0) {
@@ -111,17 +147,19 @@ public class DialogueText : MonoBehaviour {
             }
         }
         else if (state == "scroll") {
-            scrollLineTimer += GTime.deltaTime;
+            scrollLineTimer += GTime.unscaledDeltaTime;
             for (int i = 0; i < lines.Count; i++) {
-                float newY = Mathf.Lerp((float)i * lineHeight + textY, (float)(i+1) * lineHeight + textY, scrollLineTimer/scrollLineTime);
+                float scrollPercent = scrollLineTimer/scrollLineTime;
+                float newY = Mathf.Lerp((float)i * lineHeight + textY, (float)(i+1) * lineHeight + textY, scrollPercent);
                 lines[i].transform.localPosition = new Vector3(lines[i].transform.localPosition.x, newY, 0);
+                // experimental
+                if (i == maxLines-1) {
+                    lines[i].transform.localScale = new Vector3(1, Mathf.Clamp(1f - scrollPercent, 0, 1), 1);
+                }
             }
             if (scrollLineTimer > scrollLineTime) {
                 // remove extra lines
-                if (lines.Count >= maxLines) {
-                    Destroy(lines[lines.Count-1].gameObject);
-                    lines.RemoveAt(lines.Count-1);
-                }
+                RemoveExcessLines();
                 // continue
                 state = "ready";
             }
@@ -130,7 +168,7 @@ public class DialogueText : MonoBehaviour {
             EndDialogue();
         }
         else if (state == "interrupt") {
-            interruptTimer -= Time.deltaTime;
+            interruptTimer -= Time.unscaledDeltaTime;
             if (interruptTimer < 0) {
                 EndDialogue();
             }
@@ -139,7 +177,13 @@ public class DialogueText : MonoBehaviour {
         // step 2: get line, create dialouge line, shorten text to write
         // wait for line to complete. then either wait for time, or wait for button press. and begin agian.
         // if textToWrite is empty. wait for button press to end.
+    }
 
+    void RemoveExcessLines() {
+        if (lines.Count >= maxLines) {
+            Destroy(lines[lines.Count-1].gameObject);
+            lines.RemoveAt(lines.Count-1);
+        }
     }
 
     void GetLine() {
@@ -188,7 +232,10 @@ public class DialogueText : MonoBehaviour {
     }
 
     public void EndDialogue () {
+        Instance = null;
+        GTime.timeScale = 1;
         Destroy(this.gameObject);
+        
     }
 
     public void Interrupt() {

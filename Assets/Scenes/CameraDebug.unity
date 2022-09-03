@@ -1621,6 +1621,8 @@ GameObject:
   - component: {fileID: 381913180}
   - component: {fileID: 381913185}
   - component: {fileID: 381913186}
+  - component: {fileID: 381913188}
+  - component: {fileID: 381913187}
   m_Layer: 9
   m_Name: NPC
   m_TagString: Untagged
@@ -1754,7 +1756,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &381913185
 MonoBehaviour:
@@ -1768,15 +1770,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a18adcfad8a8e46a09f985c48bfa7ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: 'Hey man!
+  text: 'How do you like my stick?
 
-    You can''t pass here!
+    *toot*
 
-    How do you like my stick?'
-  idle: {fileID: 0}
-  talk: {fileID: 0}
+    ...
+
+    Yah, i just farted...
+    Gettin'' relaxed.'
+  facePlayer: 1
+  idle: {fileID: 7400000, guid: f8b65808da1a945769553068a939b51f, type: 2}
+  talk: {fileID: 7400000, guid: 59fccb738d4bc442fab94c987acdbf3e, type: 2}
   walk: {fileID: 0}
-  hit: {fileID: 0}
 --- !u!114 &381913186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1792,9 +1797,41 @@ MonoBehaviour:
   maxHealth: 1
   health: 0
   damageHitPartcile: {fileID: 0}
-  deathObject: {fileID: 0}
+  deathObject: {fileID: 3438546696491852984, guid: b82ef165a994343d6b2654d6e67beff3, type: 3}
   looseHealthInvincibilityTime: 0.1
   histopTime: 0.33
+--- !u!114 &381913187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381913179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89a8ca009b14008429f621808bba2086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_defaultAnim: {fileID: 0}
+--- !u!95 &381913188
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381913179}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &390394808
 GameObject:
   m_ObjectHideFlags: 0
@@ -3018,7 +3055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3980,7 +4017,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 65
+  m_RootOrder: 67
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &914534581
 GameObject:
@@ -21587,7 +21624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22782,7 +22819,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_RootOrder
-      value: 67
+      value: 66
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22839,7 +22876,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_RootOrder
-      value: 66
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_LocalPosition.x

@@ -13,6 +13,7 @@ public class DeathObject : MonoBehaviour {
     public bool fickerWhenDying;
     public GameObject[] deathObjects;
     public AudioClip sound; // NOT WORKING YET! <-- need sound mananger
+    [TextArea] public string sayOnDeath;
 
     float timer;
     Vector2 originalPos;
@@ -23,6 +24,8 @@ public class DeathObject : MonoBehaviour {
 
     void Start() {
         sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<SpriteAnim>();
+        
         if (clipLengthIsLife) {
             life = clip.length;
         }
@@ -72,6 +75,7 @@ public class DeathObject : MonoBehaviour {
                 t.localScale = transform.localScale;
             }
         }
+        if (sayOnDeath != "") Dialogue.NewDialogue(sayOnDeath, false);
         Destroy(this.gameObject);
     }
 }
