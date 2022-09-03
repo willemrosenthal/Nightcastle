@@ -44,6 +44,9 @@ public class Player : MonoBehaviour {
     public GameObject whipArmCrouched;
     GameObject spawnedWhipArm;
 
+    // casting
+    int previousFacingDir;
+
     // gravity and jump internal variables
     float gravity;
     float jumpVelocity;
@@ -56,7 +59,7 @@ public class Player : MonoBehaviour {
     Vector3 velocity;
     float velocityXSmoothing;
 
-    Vector2 directionalInput;
+    [HideInInspector] public Vector2 directionalInput;
     bool wallSliding;
     int wallDirX;
 
@@ -134,6 +137,8 @@ public class Player : MonoBehaviour {
         HandleAttack();
         HandleHurt();
         HandleRun();
+        HandleCasting();
+
         if (FallHard ()) {
             return;
         }
@@ -179,6 +184,20 @@ public class Player : MonoBehaviour {
         }
         //else if (runOk && ((runDir == -1 && playerInputs.DpadLeft.IsPressed) || (runDir == 1 && playerInputs.DpadRight.IsPressed)) && state.GetState() == "fall") runOk = true;
         else runOk = false;
+    }
+
+    void HandleCasting () {
+        if (state.GetState() != "casting" && state.GetState() != "hurt" && playerInputs.Q.IsPressed && controller.collisions.below) {
+            state.EnterState("casting");
+            previousFacingDir = Mathf.FloorToInt(transform.localScale.x);
+        }
+        if (state.GetState() == "casting") {
+            velocity.x = 0;
+            if (playerInputs.Q.WasReleased) {
+                state.ExitState();
+                animate.FaceDir(previousFacingDir);
+            }
+        }
     }
 
     void HandleHurt () {

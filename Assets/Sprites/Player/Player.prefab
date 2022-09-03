@@ -263,6 +263,11 @@ MonoBehaviour:
   walk: {fileID: 7400000, guid: e8d145041f22845f0aab000706ae63ba, type: 2}
   whipHoldCrouching: {fileID: 7400000, guid: eebf01f3523454030b020b60340dad81, type: 2}
   whipHoldStanding: {fileID: 7400000, guid: 97cce516c855240aa83f4434f09cf196, type: 2}
+  casting_down: {fileID: 7400000, guid: 8ea3da4e51afa465d91687930f8d5b22, type: 2}
+  casting_left: {fileID: 7400000, guid: 36aaffcfe08ab4b339c829cb1fc3dac3, type: 2}
+  casting_neutral: {fileID: 7400000, guid: f8672562ff7524cf9b4dd4242e60c34b, type: 2}
+  casting_right: {fileID: 7400000, guid: 21d5f0557b36e48b88c17a2672e7cb98, type: 2}
+  casting_up: {fileID: 7400000, guid: 6ce8d55d20cf14b78bba05e81204ab43, type: 2}
   anim: {fileID: 0}
 --- !u!114 &8402398489666501746
 MonoBehaviour:

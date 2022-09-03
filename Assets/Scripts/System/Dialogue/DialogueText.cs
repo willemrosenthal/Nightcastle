@@ -14,7 +14,7 @@ public class DialogueText : MonoBehaviour {
     float maxLinePxSize = 224;
     float maxLineSize;
 
-    float textY = -2.8f;
+    float textY = -2.78f;
     float lineHeight = (1f/32f) * 14;
 
     // writing

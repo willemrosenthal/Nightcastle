@@ -22,6 +22,12 @@ public class PlayerAnimation : MonoBehaviour {
     public AnimationClip whipHoldCrouching;
     public AnimationClip whipHoldStanding;
 
+    public AnimationClip casting_down;
+    public AnimationClip casting_left;
+    public AnimationClip casting_neutral;
+    public AnimationClip casting_right;
+    public AnimationClip casting_up;
+
     string current;
     Vector2 inputDirection;
 
@@ -65,8 +71,18 @@ public class PlayerAnimation : MonoBehaviour {
             // while you are attacking, only do that
             if (state.GetState() == "attack") return;
 
+            // casting
+            if (player.state.GetState() == "casting") {
+                if (input.y > 0 && input.x == 0) PlayAnimation(casting_up);
+                else if (input.x > 0 && input.y == 0) PlayAnimation(casting_right);
+                else if (input.y < 0 && input.x == 0) PlayAnimation(casting_down);
+                else if (input.x < 0 && input.y == 0) PlayAnimation(casting_left);
+                else PlayAnimation(casting_neutral);
+                FaceDir(1);
+                // should remember previous facing and return there when done
+            }
             // walk
-            if (input.x != 0) {
+            else if (input.x != 0) {
                 if (player.push.pushing) PlayAnimation (push);
                 else if ((player.runOk || IsPlaying(run)) && !player.controller.collisions.left && !player.controller.collisions.right) PlayAnimation(run);
                 else PlayAnimation (walk);

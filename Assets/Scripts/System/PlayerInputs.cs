@@ -27,6 +27,7 @@ public class PlayerInputs : PlayerActionSet
 	public PlayerAction S;
 	public PlayerAction D;
 	public PlayerAction B;
+	public PlayerAction Q;
 	
 
 	// keyboard directions
@@ -106,6 +107,7 @@ public class PlayerInputs : PlayerActionSet
 		S = CreatePlayerAction ("S");
 		D = CreatePlayerAction ("D");
 		B = CreatePlayerAction ("B");
+		Q = CreatePlayerAction ("Q");
 
 		ScrollUp = CreatePlayerAction ("Scroll Up");
 		ScrollDown = CreatePlayerAction ("Scroll Down");
@@ -192,6 +194,8 @@ public class PlayerInputs : PlayerActionSet
 		playerActions.D.AddDefaultBinding (Key.D);
 
 		playerActions.B.AddDefaultBinding (Key.B);
+
+		playerActions.Q.AddDefaultBinding (Key.Q);
 
 		playerActions.ScrollUp.AddDefaultBinding (Mouse.PositiveScrollWheel);
 		playerActions.ScrollDown.AddDefaultBinding (Mouse.NegativeScrollWheel);
