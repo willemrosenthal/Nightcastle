@@ -115,6 +115,11 @@ public class Player : MonoBehaviour {
     }
 
     void Update() {
+        // things that block the player from doing things
+        if (Dialogue.blocking) {
+            return;
+        }
+
         // get directional input
         directionalInput = playerInputs.Dpad;
 

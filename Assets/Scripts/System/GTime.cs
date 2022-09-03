@@ -33,6 +33,9 @@ public static class GTime {
         unscaledDeltaTime = _unscaledDeltaTime;
         time = _time;
         unscaledTime = _unscaledTime;
+
+        // update world time
+        WorldTime.UpdateTime(deltaTime);
     }
 
 }

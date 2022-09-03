@@ -31,9 +31,10 @@ public class DialogueText : MonoBehaviour {
     float lineTime = 1;
 
     // text bg
+    bool blocking;
     GameObject textBg;
     SpriteRenderer textBgRenderer;
-    float bgAppearTime = 0.65f;
+    float bgAppearTime = 0.5f;
     float bgAppearTimer = 0;
     
 
@@ -76,11 +77,9 @@ public class DialogueText : MonoBehaviour {
         transform.localPosition = new Vector3(0,0,10);
     }
 
-    public void Initilize(string textToSay, bool blocking = true) {
+    public void Initilize(string textToSay, bool _blocking = true) {
         // build line tester
         LineTeter();
-
-        Debug.Log(textToSay);
 
         // set up text tos ay
         text = textToSay;
@@ -92,7 +91,9 @@ public class DialogueText : MonoBehaviour {
         state = "ready";
 
         // if blocking
-        if (blocking) {
+        if (_blocking) {
+            blocking = true;
+            Dialogue.Block();
             TextBg();
             GTime.timeScale = 0;
             state = "createBackground";
@@ -104,6 +105,7 @@ public class DialogueText : MonoBehaviour {
 		textBg = Instantiate((GameObject)Resources.Load(pathToFont, typeof(GameObject)), transform.position + Vector3.down * 2.5f, Quaternion.identity);
         textBg.transform.parent = transform;
         textBgRenderer = textBg.GetComponent<SpriteRenderer>();
+        textBgRenderer.material.SetFloat("_Cutoff", 1);
     }
 
     void LineTeter() {
@@ -249,6 +251,10 @@ public class DialogueText : MonoBehaviour {
                 interruptTimer = 0;
             }
         }
+    }
+
+    void OnDestroy() {
+        if (blocking || Dialogue.blocking) Dialogue.Unblock();
     }
 
     // load font object

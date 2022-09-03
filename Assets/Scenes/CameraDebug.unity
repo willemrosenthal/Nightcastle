@@ -1778,10 +1778,12 @@ MonoBehaviour:
 
     Yah, i just farted...
     Gettin'' relaxed.'
+  hitText: What?!
   facePlayer: 1
   idle: {fileID: 7400000, guid: f8b65808da1a945769553068a939b51f, type: 2}
   talk: {fileID: 7400000, guid: 59fccb738d4bc442fab94c987acdbf3e, type: 2}
   walk: {fileID: 0}
+  hit: {fileID: 7400000, guid: 30c8d9bc8063147baac0a30b2ebe9eb4, type: 2}
 --- !u!114 &381913186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1794,7 +1796,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0f0e1eb254b470a8282ad4b1b643ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
+  maxHealth: 6
   health: 0
   damageHitPartcile: {fileID: 0}
   deathObject: {fileID: 3438546696491852984, guid: b82ef165a994343d6b2654d6e67beff3, type: 3}

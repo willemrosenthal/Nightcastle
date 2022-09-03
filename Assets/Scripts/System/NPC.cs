@@ -10,6 +10,7 @@ using PowerTools;
 public class NPC : MonoBehaviour
 {
     [TextArea] public string text = "";
+    [TextArea] public string hitText = "";
     bool talking;
 
     public bool facePlayer;
@@ -18,9 +19,15 @@ public class NPC : MonoBehaviour
 
     DialogueText dialogue;
 
+    float hitTime = 0.75f;
+    float hitTimer;
+    int currentHealth;
+    
+
     public AnimationClip idle;
     public AnimationClip talk;
     public AnimationClip walk;
+    public AnimationClip hit;
 
     PlayerInputs playerInputs;
     Player player; 
@@ -30,6 +37,7 @@ public class NPC : MonoBehaviour
 
     void Start() {
         health = GetComponent<Health>();
+        currentHealth = health.health;
         anim = GetComponent<SpriteAnim>(); 
         animator = GetComponent<Animator>();
         player = Player.Instance;
@@ -44,17 +52,25 @@ public class NPC : MonoBehaviour
 
         float distToPlayer = Vector2.Distance(player.transform.position, transform.position);
         if (!talking) {
+            // interract with npc
             if (player.controller.collisions.below && playerInputs.D.WasPressed && distToPlayer < 1 && Dialogue.GetDialogue() == null) {
                 dialogue = Dialogue.NewDialogue(text);
                 talking = true; 
-                if (anim && talk) {
-                    animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-                    anim.Play(talk);
-                }
+                animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+                anim.Play(talk);
+            }
+            // hit
+            if (currentHealth != health.health) {
+                currentHealth = health.health;
+                dialogue = Dialogue.NewDialogue(hitText, false);
+                talking = true;
+                if (hit) anim.Play(hit);
+                hitTimer = hitTime;
             }
         } 
-        if (talking) {
-            if (distToPlayer > talkRange * 1.1f) dialogue.Interrupt();
+        else if (talking) {
+            hitTimer -= GTime.deltaTime;
+            if (distToPlayer > talkRange * 1.1f && hitTimer <= 0) dialogue.Interrupt();
             if (dialogue == null) talking = false;
 
             // if talking ends
