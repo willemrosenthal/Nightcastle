@@ -186,6 +186,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   colliderBox: {fileID: 0}
+  debug: 0
   maxSlopeAngle: 55
 --- !u!114 &1578839686523931024
 MonoBehaviour:
@@ -211,6 +212,7 @@ MonoBehaviour:
   wallStickTime: 0.2
   whipArm: {fileID: 1596009393002309834, guid: 15397c71650e34bb1b60bf69163433a8, type: 3}
   whipArmCrouched: {fileID: 1596009393002309834, guid: 8be884f6b14e84acfbee6d26da187b0b, type: 3}
+  directionalInput: {x: 0, y: 0}
   controller: {fileID: 0}
   health: {fileID: 0}
   state: {fileID: 0}
@@ -268,6 +270,8 @@ MonoBehaviour:
   casting_neutral: {fileID: 7400000, guid: f8672562ff7524cf9b4dd4242e60c34b, type: 2}
   casting_right: {fileID: 7400000, guid: 21d5f0557b36e48b88c17a2672e7cb98, type: 2}
   casting_up: {fileID: 7400000, guid: 6ce8d55d20cf14b78bba05e81204ab43, type: 2}
+  magicSparkle: {fileID: 2021923347623974992, guid: 1100f72acb80c40739097a90598b9267, type: 3}
+  magicLine: {fileID: 919493610648698223, guid: 60deb77c08f8c46f7b5122917fd535ac, type: 3}
   anim: {fileID: 0}
 --- !u!114 &8402398489666501746
 MonoBehaviour:

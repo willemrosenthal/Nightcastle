@@ -26450,14 +26450,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1578839686523931016, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: magicSparkle
-      value: 
-      objectReference: {fileID: 2021923347623974992, guid: 1100f72acb80c40739097a90598b9267, type: 3}
-    - target: {fileID: 1578839686523931025, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: debug
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931027, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_Name
       value: Player
@@ -26465,10 +26457,6 @@ PrefabInstance:
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.x

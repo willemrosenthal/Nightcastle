@@ -29,8 +29,11 @@ public class PlayerAnimation : MonoBehaviour {
     public AnimationClip casting_up;
 
     public GameObject magicSparkle;
+    public GameObject magicLine;
     GameObject magicSparkleObj;
+    GameObject magicLineObj;
     Vector2 sparkleSmoothVelocity;
+    Vector2 lineSmoothVelocity;
 
     string current;
     Vector2 inputDirection;
@@ -83,8 +86,8 @@ public class PlayerAnimation : MonoBehaviour {
                 else if (input.x < 0 && input.y == 0) PlayAnimation(casting_left);
                 else PlayAnimation(casting_neutral);
                 FaceDir(1);
-                MakeMagicSparkle();
-                MoveMagicSparkle(input);
+                MakeMagicParticles();
+                MoveMagicParticles(input);
                 // should remember previous facing and return there when done
             }
             // walk
@@ -111,6 +114,7 @@ public class PlayerAnimation : MonoBehaviour {
             // kill the sparkle
             if (player.state.GetState() != "casting" && magicSparkleObj) {
                 Destroy(magicSparkleObj);
+                Destroy(magicLineObj);
                 SpellListener.Instance.EndListening();
             }
         }
@@ -148,20 +152,30 @@ public class PlayerAnimation : MonoBehaviour {
         return Mathf.Sign(transform.localScale.x);
     }
 
-    void MakeMagicSparkle() {
+    void MakeMagicParticles() {
         if (!magicSparkleObj) {
-            SpellListener.Instance.StartListening();
             magicSparkleObj = Instantiate(magicSparkle, player.controller.colliderBox.bounds.center, Quaternion.identity);
+            magicSparkleObj.transform.parent = transform;
+
         }
+        if (!magicLineObj) {
+            magicLineObj = Instantiate(magicLine, player.controller.colliderBox.bounds.center, Quaternion.identity);
+            magicLineObj.transform.parent = transform;
+        }
+        // listen for spells
+        if (!SpellListener.Instance.listening) SpellListener.Instance.StartListening();
     }
-    void MoveMagicSparkle(Vector2 input) {
+    void MoveMagicParticles(Vector2 input) {
+        Vector2 goalPos = transform.InverseTransformPoint(player.controller.colliderBox.bounds.center) + Vector3.up * 0.25f;
+        if (input.y > 0 && input.x == 0) goalPos += Vector2.up * 0.85f;
+        else if (input.x > 0 && input.y == 0) goalPos += Vector2.right * 0.6f;
+        else if (input.y < 0 && input.x == 0) goalPos += Vector2.down * 0.7f;
+        else if (input.x < 0 && input.y == 0) goalPos += Vector2.left * 0.85f;
         if (magicSparkleObj) {
-            Vector2 goalPos = player.controller.colliderBox.bounds.center + Vector3.up * 0.25f;
-            if (input.y > 0 && input.x == 0) goalPos += Vector2.up * 0.85f;
-            else if (input.x > 0 && input.y == 0) goalPos += Vector2.right * 0.6f;
-            else if (input.y < 0 && input.x == 0) goalPos += Vector2.down * 0.7f;
-            else if (input.x < 0 && input.y == 0) goalPos += Vector2.left * 0.85f;
-            magicSparkleObj.transform.position = Vector2.SmoothDamp(magicSparkleObj.transform.position, goalPos, ref sparkleSmoothVelocity, 0.1f);
+            magicSparkleObj.transform.localPosition = Vector2.SmoothDamp(magicSparkleObj.transform.localPosition, goalPos, ref sparkleSmoothVelocity, 0.1f);
+        }
+        if (magicLineObj) {
+            magicLineObj.transform.localPosition = Vector2.SmoothDamp(magicLineObj.transform.localPosition, goalPos, ref lineSmoothVelocity, 0.1f);
         }
     }
 }
