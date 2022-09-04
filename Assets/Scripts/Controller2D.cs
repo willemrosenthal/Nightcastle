@@ -104,21 +104,24 @@ public class Controller2D : RaycastController {
             */
         }
         
-        RaycastHit2D hit = Physics2D.BoxCast (castCenter, boundsSize, 0, Vector2.right * directionX, rayLength, collisionMask);
-        if (hit) {
-            if (hit.collider.tag == "Cloud" || hit.distance == 0) {
-                return;
+        // did this as a raycast all to prevent going though solid objcts when already passing though a cloud
+        RaycastHit2D[] hits = Physics2D.BoxCastAll (castCenter, boundsSize, 0, Vector2.right * directionX, rayLength, collisionMask);
+        foreach (RaycastHit2D hit in hits) {
+            if (hit) {
+                if (hit.collider.tag == "Cloud" || hit.distance == 0) {
+                    continue;
+                }
+                //float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+
+                //if (slopeAngle > maxSlopeAngle) {
+                moveAmount.x = (hit.distance - skinWidth * 1.01f) * directionX;
+                rayLength = hit.distance;
+
+                collisions.left = directionX == -1;
+                collisions.right = directionX == 1;
+                collisions.sideCollisionObject = hit.transform;
+                //}
             }
-            //float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
-
-            //if (slopeAngle > maxSlopeAngle) {
-            moveAmount.x = (hit.distance - skinWidth * 1.01f) * directionX;
-            rayLength = hit.distance;
-
-            collisions.left = directionX == -1;
-            collisions.right = directionX == 1;
-            collisions.sideCollisionObject = hit.transform;
-            //}
         }
     }
 
