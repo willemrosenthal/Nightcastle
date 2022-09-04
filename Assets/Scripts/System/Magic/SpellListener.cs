@@ -56,6 +56,7 @@ public class SpellListener : MonoBehaviour {
             HeartBeat();
             beatTimer += beat * beatSpeedAdjust;
             AddToSpell();
+            //Invoke("AddToSpell", 0.1f);
         } 
     }
 

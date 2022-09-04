@@ -41,7 +41,7 @@ public class CameraMan : MonoBehaviour {
 
     void LateUpdate() {
         // centers cameraman on player's collider
-        transform.position = (Vector2)player.transform.position + playerCameraOffset;
+        transform.position = (Vector2)player.transform.position + playerCameraOffset * player.transform.localScale.y;
 
         // update the camera after the cameraman has done his thing
         cameraFollow.CameraUpdate();

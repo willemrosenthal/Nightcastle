@@ -16,6 +16,9 @@ public class Controller2D : RaycastController {
     // this is turned on to prevent self-collision
     bool useRacastAll = false;
 
+    // gravity direction
+    float gravityDir = 1;
+
     public override void Start() {
         base.Start();
 
@@ -34,9 +37,11 @@ public class Controller2D : RaycastController {
         UpdateRaycastOrigins ();
         collisions.Reset ();
         collisions.moveAmountOld = moveAmount;
+        gravityDir = 1;
 
         // reverse gravity
         if (transform.localScale.y < 0) {
+            gravityDir = -1;
             moveAmount.y *= -1;
             ReverseGravityOrigins();
         }
@@ -49,19 +54,19 @@ public class Controller2D : RaycastController {
         }
 
         //above collisions should be done before below in case moveAmount.y is reversed durring this process
-        if ((transform.localScale.y > 0 && moveAmount.y > 0) || (transform.localScale.y < 0 && moveAmount.y < 0)) {
+        if ((gravityDir > 0 && moveAmount.y > 0) || (gravityDir < 0 && moveAmount.y < 0)) {
             AboveCollisions (ref moveAmount);
             AboveEdgeCollisions (ref moveAmount);
         }
 
         // below collisions
-        if ((transform.localScale.y > 0 && moveAmount.y < 0) || (transform.localScale.y < 0 && moveAmount.y > 0)) {
+        if ((gravityDir > 0 && moveAmount.y < 0) || (gravityDir < 0 && moveAmount.y > 0)) {
             BelowCollisions (ref moveAmount);
             BelowEdgeCollisions (ref moveAmount);
         }
 
         //above collisions AGAIN
-        if ((transform.localScale.y > 0 && moveAmount.y > 0) || (transform.localScale.y < 0 && moveAmount.y < 0)) {
+        if ((gravityDir > 0 && moveAmount.y > 0) || (gravityDir < 0 && moveAmount.y < 0)) {
             AboveCollisions (ref moveAmount);
             AboveEdgeCollisions (ref moveAmount);
         }
@@ -179,7 +184,7 @@ public class Controller2D : RaycastController {
                 RaycastHit2D newHit = Raycast(newRayOrigin, Dir(Vector2.down), skinWidth, collisionMask);
                 if (newHit) {
                     float yDiff = newHit.distance - skinWidth;
-                    moveAmount.y += -yDiff * Mathf.Sign(transform.localScale.y);
+                    moveAmount.y += -yDiff * gravityDir;
                 }
             }
         }
@@ -193,12 +198,12 @@ public class Controller2D : RaycastController {
 
         // if we are not jumping on a slope, climb the slope
         //if (moveAmount.y <= 0) {
-        moveAmount.y = climbmoveAmountY * Mathf.Sign(transform.localScale.y);
+        moveAmount.y = climbmoveAmountY * gravityDir;
         moveAmount.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(moveAmount.x);
             
 
         // dont cancel out vertical movement
-        if ((preClimbMove.y > moveAmount.y && transform.localScale.y > 0) || (preClimbMove.y < moveAmount.y && transform.localScale.y < 0)) {
+        if ((preClimbMove.y > moveAmount.y && gravityDir > 0) || (preClimbMove.y < moveAmount.y && gravityDir < 0)) {
             moveAmount.y = preClimbMove.y;
         }
         else {
@@ -327,7 +332,7 @@ public class Controller2D : RaycastController {
                 //float wasY = moveAmount.y;
                 // only set new y dist if it brings you down farther
                 //if ((hit.distance - skinWidth) * -1 < moveAmount.y) {
-                moveAmount.y = (hit.distance - skinWidth) * -1 * Mathf.Sign(transform.localScale.y);
+                moveAmount.y = (hit.distance - skinWidth) * -1 * gravityDir;
                 //}
                 collisions.below = true;
                 if (collisions.above) {
@@ -517,23 +522,14 @@ public class Controller2D : RaycastController {
                 }
             }
             if (slopeAngle == 0 && !collisions.onSlope) {
-                Debug.Log("this is the culprate " + moveAmount.y);
-                if (transform.localScale.y > 0) {
-                    moveAmount.y = (hit.distance>skinWidth) ? (hit.distance - skinWidth) * -1 : 0;
-                }
-                else if (transform.localScale.y < 0) {
-                    moveAmount.y = (hit.distance>skinWidth) ? (hit.distance - skinWidth) * 1 : 0;
-                }
-                
+                moveAmount.y = (hit.distance>skinWidth) ? (hit.distance - skinWidth) * -1 * gravityDir : 0;
                 collisions.below = true;
             }
         }
     }
 
     Vector2 Dir (Vector2 dir) {
-        if (transform.localScale.y < 0) {
-            dir.y *= -1;
-        }
+        dir.y *= gravityDir;
         return dir;
     }
 
