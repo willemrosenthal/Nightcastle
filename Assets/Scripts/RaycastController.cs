@@ -51,6 +51,20 @@ public class RaycastController : MonoBehaviour {
         Debug.DrawLine(raycastOrigins.topLeft, raycastOrigins.bottomLeft, new Color(1,0.5f,0,1));
     }
 
+    public void ReverseGravityOrigins() {
+        Vector2 remember = raycastOrigins.bottom;
+        raycastOrigins.bottom = raycastOrigins.top;
+        raycastOrigins.top = remember;
+
+        remember = raycastOrigins.bottomLeft;
+        raycastOrigins.bottomLeft = raycastOrigins.topLeft;
+        raycastOrigins.topLeft = remember;
+
+        remember = raycastOrigins.bottomRight;
+        raycastOrigins.bottomRight = raycastOrigins.topRight;
+        raycastOrigins.topRight = remember;
+    }
+
     public void CaclulateRaySpacing() {
         Bounds bounds = colliderBox.bounds;
         bounds.Expand(skinWidth * -2);

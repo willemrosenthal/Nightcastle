@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Controller2D : RaycastController {
 
+    public bool debug = false;
+
     public float maxSlopeAngle = 55;
 
     public CollisionInfo collisions;
@@ -28,11 +30,17 @@ public class Controller2D : RaycastController {
     }
 
 
-    public void Move(Vector2 moveAmount, bool standingOnPlatform = false) {
-        
+    public void Move(Vector2 moveAmount, bool standingOnPlatform = false) {        
         UpdateRaycastOrigins ();
         collisions.Reset ();
         collisions.moveAmountOld = moveAmount;
+
+        // reverse gravity
+        if (transform.localScale.y < 0) {
+            moveAmount.y *= -1;
+            ReverseGravityOrigins();
+        }
+
         
         if (moveAmount.x != 0) { // handles clouds
             SolidBlockHorizontalCollisions(ref moveAmount);
@@ -41,19 +49,19 @@ public class Controller2D : RaycastController {
         }
 
         //above collisions should be done before below in case moveAmount.y is reversed durring this process
-        if (moveAmount.y > 0){
+        if ((transform.localScale.y > 0 && moveAmount.y > 0) || (transform.localScale.y < 0 && moveAmount.y < 0)) {
             AboveCollisions (ref moveAmount);
             AboveEdgeCollisions (ref moveAmount);
         }
 
         // below collisions
-        if (moveAmount.y < 0){
+        if ((transform.localScale.y > 0 && moveAmount.y < 0) || (transform.localScale.y < 0 && moveAmount.y > 0)) {
             BelowCollisions (ref moveAmount);
             BelowEdgeCollisions (ref moveAmount);
         }
 
         //above collisions AGAIN
-        if (moveAmount.y > 0){
+        if ((transform.localScale.y > 0 && moveAmount.y > 0) || (transform.localScale.y < 0 && moveAmount.y < 0)) {
             AboveCollisions (ref moveAmount);
             AboveEdgeCollisions (ref moveAmount);
         }
@@ -74,7 +82,7 @@ public class Controller2D : RaycastController {
     
         // if airborne, do full box cast otherwise do a cast, but ignore the lower 25% of the charachter
         if (collisions.wasGrounded) {
-            castCenter += Vector2.up * raycastOrigins.bounds.size.y * 0.25f * 0.5f;
+            castCenter += Dir(Vector2.up) * raycastOrigins.bounds.size.y * 0.25f * 0.5f;
             boundsSize = raycastOrigins.bounds.size;
             boundsSize.y *=  0.75f;
 
@@ -117,7 +125,7 @@ public class Controller2D : RaycastController {
         // look for wall collisions
         for (int i = 0; i < horizontalRayCount; i++) {
             Vector2 rayOrigin = (directionX == -1)?raycastOrigins.bottomLeft:raycastOrigins.bottomRight;
-            rayOrigin += Vector2.up * (horizontalRaySpacing * i);
+            rayOrigin += Dir(Vector2.up) * (horizontalRaySpacing * i);
             RaycastHit2D hit = Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
             
             Debug.DrawRay(rayOrigin, Vector2.right * directionX * rayLength, Color.red);
@@ -129,7 +137,7 @@ public class Controller2D : RaycastController {
                 if (hit.distance == 0) {
                     continue;
                 }
-                float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+                float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
 
                 if (slopeAngle > maxSlopeAngle) {
                     moveAmount.x = (hit.distance - skinWidth * 1.01f) * directionX;
@@ -153,7 +161,7 @@ public class Controller2D : RaycastController {
 
         if (hit) {
             if (hit.distance == 0 || hit.collider.tag == "Cloud") return;
-            float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+            float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
             // climbing slope
             if (slopeAngle > 0 && slopeAngle <= maxSlopeAngle) {
                 float distToSlopeStart = 0;
@@ -167,11 +175,11 @@ public class Controller2D : RaycastController {
                 moveAmount.x += distToSlopeStart * directionX;
 
                 // make sure we are skin width above the surface
-                Vector2 newRayOrigin = raycastOrigins.bottom + Vector2.right * moveAmount.x + Vector2.up * moveAmount.y;
-                RaycastHit2D newHit = Raycast(newRayOrigin, Vector2.down, skinWidth, collisionMask);
+                Vector2 newRayOrigin = raycastOrigins.bottom + Vector2.right * moveAmount.x + Dir(Vector2.up) * moveAmount.y;
+                RaycastHit2D newHit = Raycast(newRayOrigin, Dir(Vector2.down), skinWidth, collisionMask);
                 if (newHit) {
                     float yDiff = newHit.distance - skinWidth;
-                    moveAmount.y += -yDiff;
+                    moveAmount.y += -yDiff * Mathf.Sign(transform.localScale.y);
                 }
             }
         }
@@ -185,12 +193,12 @@ public class Controller2D : RaycastController {
 
         // if we are not jumping on a slope, climb the slope
         //if (moveAmount.y <= 0) {
-        moveAmount.y = climbmoveAmountY;
+        moveAmount.y = climbmoveAmountY * Mathf.Sign(transform.localScale.y);
         moveAmount.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(moveAmount.x);
             
 
         // dont cancel out vertical movement
-        if (preClimbMove.y > moveAmount.y) {
+        if ((preClimbMove.y > moveAmount.y && transform.localScale.y > 0) || (preClimbMove.y < moveAmount.y && transform.localScale.y < 0)) {
             moveAmount.y = preClimbMove.y;
         }
         else {
@@ -211,7 +219,7 @@ public class Controller2D : RaycastController {
         Vector2 rayOrigin = raycastOrigins.top + Vector2.right * moveAmount.x;// + Vector2.up * moveAmount.y;
 
         // shoot ray down from bottom center
-        RaycastHit2D hit = Raycast(rayOrigin, Vector2.up, rayLength, collisionMask);
+        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.up), rayLength, collisionMask);
 
         if (hit && hit.collider.tag != "Cloud") {
             moveAmount.y = (hit.distance - skinWidth);
@@ -226,9 +234,9 @@ public class Controller2D : RaycastController {
         Vector2 savedMove = moveAmount;
         // handle flat cliffs and downward sloping cliffs
         //if (oldMoveAmount == moveAmount) {
-        RaycastHit2D hitLeft =  Raycast(raycastOrigins.topLeft  + Vector2.left * skinWidth + Vector2.right * moveAmount.x,  Vector2.up, Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
+        RaycastHit2D hitLeft =  Raycast(raycastOrigins.topLeft  + Vector2.left * skinWidth + Vector2.right * moveAmount.x,  Dir(Vector2.up), Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
         AboveEdge(hitLeft, ref moveAmount);
-        RaycastHit2D hitRight = Raycast(raycastOrigins.topRight + Vector2.right * skinWidth + Vector2.right * moveAmount.x, Vector2.up, Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
+        RaycastHit2D hitRight = Raycast(raycastOrigins.topRight + Vector2.right * skinWidth + Vector2.right * moveAmount.x, Dir(Vector2.up), Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
         AboveEdge(hitRight, ref moveAmount);
         //}
     }
@@ -245,8 +253,8 @@ public class Controller2D : RaycastController {
 
                 Vector2 rayOrigin = new Vector2(raycastOrigins.top.x + moveAmount.x, hit.point.y);
                 // see if there is a slope above you
-                RaycastHit2D slopeCheck = Raycast(rayOrigin, Vector2.up, opp + skinWidth, collisionMask);
-                Debug.DrawRay(raycastOrigins.top, Vector2.up * (opp + skinWidth), Color.red);
+                RaycastHit2D slopeCheck = Raycast(rayOrigin, Dir(Vector2.up), opp + skinWidth, collisionMask);
+                Debug.DrawRay(raycastOrigins.top, Dir(Vector2.up) * (opp + skinWidth), Color.red);
 
                 // if we find a slope above the player's head, we *may* ignore the flat collisions
                 if (slopeCheck) {
@@ -263,7 +271,7 @@ public class Controller2D : RaycastController {
 
                         RaycastHit2D wallChecker = Raycast(newRayOrigin, Vector2.right * -Mathf.Sign(hit.normal.x), newRayLength, collisionMask);
                         if (wallChecker) {
-                            float wallAngle = Vector2.Angle (-wallChecker.normal, Vector2.up);
+                            float wallAngle = Vector2.Angle (-wallChecker.normal, Dir(Vector2.up));
                             DrawPoint(wallChecker.point, Color.black, 0.05f);
 
                             if (wallAngle >= maxSlopeAngle) {
@@ -289,7 +297,9 @@ public class Controller2D : RaycastController {
         float rayLength = Mathf.Abs(moveAmount.y) + skinWidth;
 
         // if grounded and not trying to jump, then double ray length to help keep snapped to ground
-        if ((collisions.wasGrounded || collisions.below) && collisions.moveAmountOld.y < 0) rayLength += skinWidth * 5;
+        if ((collisions.wasGrounded || collisions.below) && collisions.moveAmountOld.y < 0) {
+            rayLength += skinWidth * 5;
+        }
 
         // if we were grounded, and we still have downard force...
         // increase ray based on how much x movement there is to insure that it can detect the steepest climbalbe sope downward
@@ -304,20 +314,20 @@ public class Controller2D : RaycastController {
         Vector2 rayOrigin = raycastOrigins.bottom + Vector2.right * moveAmount.x;// + Vector2.up * moveAmount.y;
 
         // shoot ray down from bottom center
-        RaycastHit2D hit = Raycast(rayOrigin, Vector2.down, rayLength, collisionMask);
+        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask);
 
         if (hit) {
             // dont collide with cloud if inside the collider
             if ((hit.distance == 0 || collisions.fallThoughCloudOk > 0) && hit.collider.tag == "Cloud") return;
 
             // continue if inside a collider, or collider is a cloud
-            float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+            float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
 
             if (slopeAngle <= maxSlopeAngle) {
                 //float wasY = moveAmount.y;
                 // only set new y dist if it brings you down farther
                 //if ((hit.distance - skinWidth) * -1 < moveAmount.y) {
-                moveAmount.y = (hit.distance - skinWidth) * -1;
+                moveAmount.y = (hit.distance - skinWidth) * -1 * Mathf.Sign(transform.localScale.y);
                 //}
                 collisions.below = true;
                 if (collisions.above) {
@@ -344,7 +354,7 @@ public class Controller2D : RaycastController {
 
         // handle walking off upward sloping cliff
         if (collisions.wasGrounded && !collisions.below) {
-            Vector2 rayOrigin = raycastOrigins.bottom + Vector2.down * (Mathf.Abs(moveAmount.y) + skinWidth) + Vector2.right * moveAmount.x;
+            Vector2 rayOrigin = raycastOrigins.bottom + Dir(Vector2.down) * (Mathf.Abs(moveAmount.y) + skinWidth) + Vector2.right * moveAmount.x;
             float rayLength = (raycastOrigins.bounds.size.x * 0.5f) + skinWidth;
 
             RaycastHit2D cliffEdgeCheck = Raycast(rayOrigin, Vector2.right * -1, rayLength, collisionMask);
@@ -356,7 +366,7 @@ public class Controller2D : RaycastController {
 
         // falling version
         if (!collisions.wasGrounded && !collisions.below) {
-            Vector2 rayOrigin = raycastOrigins.bottom + Vector2.down * skinWidth + Vector2.right * moveAmount.x;
+            Vector2 rayOrigin = raycastOrigins.bottom + Dir(Vector2.down) * skinWidth + Vector2.right * moveAmount.x;
             float rayLength = (raycastOrigins.bounds.size.x * 0.5f) + skinWidth;
 
             // bump away from walls
@@ -366,7 +376,7 @@ public class Controller2D : RaycastController {
             BumpAwayFromWall (bumpOffWallCheck, ref moveAmount);
 
             // recalulate ray origin
-            rayOrigin = raycastOrigins.bottom + Vector2.down * (Mathf.Abs(moveAmount.y) + skinWidth) + Vector2.right * moveAmount.x;
+            rayOrigin = raycastOrigins.bottom + Dir(Vector2.down) * (Mathf.Abs(moveAmount.y) + skinWidth) + Vector2.right * moveAmount.x;
             DrawPoint(rayOrigin, Color.cyan, 0.05f, 3);
 
             RaycastHit2D cliffEdgeCheck = Raycast(rayOrigin, Vector2.right * -1, rayLength, collisionMask);
@@ -377,8 +387,8 @@ public class Controller2D : RaycastController {
 
         // handle flat cliffs and downward sloping cliffs
         if (oldMoveAmount == moveAmount) {
-            RaycastHit2D hitLeft =  Raycast(raycastOrigins.bottomLeft  + Vector2.left * skinWidth,  Vector2.down, Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
-            RaycastHit2D hitRight = Raycast(raycastOrigins.bottomRight + Vector2.right * skinWidth, Vector2.down, Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
+            RaycastHit2D hitLeft =  Raycast(raycastOrigins.bottomLeft  + Vector2.left * skinWidth,  Dir(Vector2.down), Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
+            RaycastHit2D hitRight = Raycast(raycastOrigins.bottomRight + Vector2.right * skinWidth, Dir(Vector2.down), Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
 
             if (hitLeft || hitRight) {
                 BelowEdge(hitLeft, ref moveAmount);
@@ -394,7 +404,7 @@ public class Controller2D : RaycastController {
         // dont collide with cloud if inside the collider
         if ((hit.distance == 0 || collisions.fallThoughCloudOk > 0) && hit.collider.tag == "Cloud") return;
 
-        float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+        float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
 
         if (slopeAngle >= maxSlopeAngle) { 
             Vector2 rayOrigin = new Vector2(hit.point.x, raycastOrigins.bottom.y);
@@ -402,7 +412,7 @@ public class Controller2D : RaycastController {
             //DrawPoint(rayOrigin, Color.cyan, 0.05f, 0);
 
             //Debug.DrawRay(rayOrigin, Vector2.down * (Mathf.Abs(moveAmount.y) + downCheck), Color.yellow);
-            RaycastHit2D edgeHit = Raycast(rayOrigin, Vector2.down, rayLength, collisionMask);
+            RaycastHit2D edgeHit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask);
             if (edgeHit) {
                 moveAmount.y = -edgeHit.distance + skinWidth;
                 collisions.below = true;
@@ -423,7 +433,7 @@ public class Controller2D : RaycastController {
     void BumpAwayFromWall (RaycastHit2D hit, ref Vector2 moveAmount) {
         if (!hit || hit.distance == 0) return; // dont do anything if inside a collider
 
-        float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+        float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
         if (slopeAngle >= maxSlopeAngle) {
             if (hit.distance > raycastOrigins.bounds.size.x * 0.5f) moveAmount.x += Mathf.Sign(hit.normal.x) * skinWidth * 0.01f;
         }
@@ -433,7 +443,7 @@ public class Controller2D : RaycastController {
         if (!hit) return;
         if (hit.collider.tag == "Cloud") return; // dont collide with cloud
 
-        float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+        float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
 
         //Debug.Log("hit 1");
         //DrawPoint(hit.point, Color.blue, 0.02f, 3);
@@ -444,7 +454,7 @@ public class Controller2D : RaycastController {
             //DrawPoint(rayOrigin, Color.cyan, 0.05f, 3);
 
             //Debug.DrawRay(rayOrigin, Vector2.down * Mathf.Abs(moveAmount.y), Color.yellow);
-            RaycastHit2D edgeHit = Raycast(rayOrigin, Vector2.down, Mathf.Abs(moveAmount.y), collisionMask);
+            RaycastHit2D edgeHit = Raycast(rayOrigin, Dir(Vector2.down), Mathf.Abs(moveAmount.y), collisionMask);
             if (edgeHit) {
                 moveAmount.y = -edgeHit.distance;
                 collisions.below = true;
@@ -461,14 +471,14 @@ public class Controller2D : RaycastController {
             // if not grounded and hit is inside continue
             if (hit.distance == 0 && !collisions.wasGrounded) return;
             
-            float slopeAngle = Vector2.Angle (hit.normal, Vector2.up);
+            float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
             if (slopeAngle > 0 && slopeAngle < maxSlopeAngle) {
                 // adjasent side = dist from hit corner to center of collider
                 float adj = (raycastOrigins.bounds.size.x * 0.5f) + skinWidth;
                 float opp = Mathf.Tan(maxSlopeAngle * Mathf.Deg2Rad) * adj;
 
                 // added additional skin width to be super safe
-                RaycastHit2D slopeCheck = Raycast(raycastOrigins.bottom, Vector2.down, opp + skinWidth * 2, collisionMask);
+                RaycastHit2D slopeCheck = Raycast(raycastOrigins.bottom, Dir(Vector2.down), opp + skinWidth * 2, collisionMask);
                 //Debug.DrawRay(raycastOrigins.bottom, Vector2.down * (opp + skinWidth * 2), Color.cyan, 1);
                 bool sideWallsDetected = false;
 
@@ -486,7 +496,7 @@ public class Controller2D : RaycastController {
                         RaycastHit2D wallChecker = Raycast(_checkPt, Vector2.right * -Mathf.Sign(hit.normal.x), _rayLength, collisionMask);
                         if (wallChecker) {
                             if (_edgeDebugs) DrawPoint(wallChecker.point, Color.black, 0.05f);
-                            float wallAngle = Vector2.Angle (wallChecker.normal, Vector2.up);
+                            float wallAngle = Vector2.Angle (wallChecker.normal, Dir(Vector2.up));
                             if (wallAngle >= maxSlopeAngle) {
                                 sideWallsDetected = true;
                                 break;
@@ -497,7 +507,7 @@ public class Controller2D : RaycastController {
                 if (slopeCheck && !sideWallsDetected) {
                     DrawPoint(slopeCheck.point, Color.white, 0.1f);
 
-                    slopeAngle = Vector2.Angle (slopeCheck.normal, Vector2.up);
+                    slopeAngle = Vector2.Angle (slopeCheck.normal, Dir(Vector2.up));
                     collisions.onSlope = true;
                     return;
                 }
@@ -507,10 +517,24 @@ public class Controller2D : RaycastController {
                 }
             }
             if (slopeAngle == 0 && !collisions.onSlope) {
-                moveAmount.y = (hit.distance>skinWidth) ? (hit.distance - skinWidth) * -1 : 0;
+                Debug.Log("this is the culprate " + moveAmount.y);
+                if (transform.localScale.y > 0) {
+                    moveAmount.y = (hit.distance>skinWidth) ? (hit.distance - skinWidth) * -1 : 0;
+                }
+                else if (transform.localScale.y < 0) {
+                    moveAmount.y = (hit.distance>skinWidth) ? (hit.distance - skinWidth) * 1 : 0;
+                }
+                
                 collisions.below = true;
             }
         }
+    }
+
+    Vector2 Dir (Vector2 dir) {
+        if (transform.localScale.y < 0) {
+            dir.y *= -1;
+        }
+        return dir;
     }
 
     void DrawPoint(Vector2 point, Color color, float size = 0.3f, float time = 0.5f) {

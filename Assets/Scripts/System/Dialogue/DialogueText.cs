@@ -93,7 +93,7 @@ public class DialogueText : MonoBehaviour {
         // if blocking
         if (_blocking) {
             blocking = true;
-            Dialogue.Block();
+            Game.InDialogue();
             TextBg();
             GTime.timeScale = 0;
             state = "createBackground";
@@ -254,7 +254,7 @@ public class DialogueText : MonoBehaviour {
     }
 
     void OnDestroy() {
-        if (blocking || Dialogue.blocking) Dialogue.Unblock();
+        if (blocking || Game.inDialogue) Game.EndDialogue();
     }
 
     // load font object

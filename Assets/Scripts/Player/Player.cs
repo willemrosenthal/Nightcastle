@@ -119,7 +119,7 @@ public class Player : MonoBehaviour {
 
     void Update() {
         // things that block the player from doing things
-        if (Dialogue.blocking) {
+        if (Game.IsStopped()) {
             return;
         }
 
@@ -175,11 +175,9 @@ public class Player : MonoBehaviour {
             runTapTimer = runTapTime;
         } 
         if (runDir == 1 && playerInputs.DpadRight.IsPressed && runTapTimer > 0 && controller.collisions.below) {
-            Debug.Log("RUN OK");
             runOk = true;
         }
         else if (runDir == -1 && playerInputs.DpadLeft.IsPressed && runTapTimer > 0 && controller.collisions.below) {
-            Debug.Log("RUN OK");
             runOk = true;
         }
         //else if (runOk && ((runDir == -1 && playerInputs.DpadLeft.IsPressed) || (runDir == 1 && playerInputs.DpadRight.IsPressed)) && state.GetState() == "fall") runOk = true;
@@ -282,7 +280,7 @@ public class Player : MonoBehaviour {
     }
 
     public void OnJumpInputDown() {
-        //Debug.Log("JUMP ATTEMPT: " + controller.collisions.below);
+        Debug.Log("JUMP ATTEMPT: " + controller.collisions.below);
         if (wallSliding) {
             // fall off wall
             if (directionalInput.x == 0) {

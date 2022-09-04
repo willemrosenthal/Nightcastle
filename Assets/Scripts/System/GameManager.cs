@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public GameTime time;
     [HideInInspector] public CameraBounds cameraBounds;
     [HideInInspector] public CameraFollow cameraFollow;
+    [HideInInspector] public AudioManager am;
 
     void Awake() {
         // set up as singleton, 
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour {
         im = GetComponent<InputManager>();
         playerInputs = im.playerInputs;
         time = GetComponent<GameTime>();
+        am = GetComponent<AudioManager>();
     }
 
     void Singleton () {
@@ -42,7 +44,6 @@ public class GameManager : MonoBehaviour {
 	}
 
     void Start() {
-
         ConfigureQuality();
     }
 

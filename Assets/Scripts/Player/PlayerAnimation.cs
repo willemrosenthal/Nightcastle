@@ -28,6 +28,10 @@ public class PlayerAnimation : MonoBehaviour {
     public AnimationClip casting_right;
     public AnimationClip casting_up;
 
+    public GameObject magicSparkle;
+    GameObject magicSparkleObj;
+    Vector2 sparkleSmoothVelocity;
+
     string current;
     Vector2 inputDirection;
 
@@ -79,6 +83,8 @@ public class PlayerAnimation : MonoBehaviour {
                 else if (input.x < 0 && input.y == 0) PlayAnimation(casting_left);
                 else PlayAnimation(casting_neutral);
                 FaceDir(1);
+                MakeMagicSparkle();
+                MoveMagicSparkle(input);
                 // should remember previous facing and return there when done
             }
             // walk
@@ -100,6 +106,12 @@ public class PlayerAnimation : MonoBehaviour {
             else {
                 player.state.EnterState("idle");
                 PlayAnimation (idle);
+            }
+
+            // kill the sparkle
+            if (player.state.GetState() != "casting" && magicSparkleObj) {
+                Destroy(magicSparkleObj);
+                SpellListener.Instance.EndListening();
             }
         }
     }
@@ -134,5 +146,22 @@ public class PlayerAnimation : MonoBehaviour {
 
     public float GetFacing() {
         return Mathf.Sign(transform.localScale.x);
+    }
+
+    void MakeMagicSparkle() {
+        if (!magicSparkleObj) {
+            SpellListener.Instance.StartListening();
+            magicSparkleObj = Instantiate(magicSparkle, player.controller.colliderBox.bounds.center, Quaternion.identity);
+        }
+    }
+    void MoveMagicSparkle(Vector2 input) {
+        if (magicSparkleObj) {
+            Vector2 goalPos = player.controller.colliderBox.bounds.center + Vector3.up * 0.25f;
+            if (input.y > 0 && input.x == 0) goalPos += Vector2.up * 0.85f;
+            else if (input.x > 0 && input.y == 0) goalPos += Vector2.right * 0.6f;
+            else if (input.y < 0 && input.x == 0) goalPos += Vector2.down * 0.7f;
+            else if (input.x < 0 && input.y == 0) goalPos += Vector2.left * 0.85f;
+            magicSparkleObj.transform.position = Vector2.SmoothDamp(magicSparkleObj.transform.position, goalPos, ref sparkleSmoothVelocity, 0.1f);
+        }
     }
 }

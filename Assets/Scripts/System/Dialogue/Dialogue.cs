@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class Dialogue {
 
-    public static bool blocking;
     public static DialogueText dialogue;
 
     public static DialogueText NewDialogue (string textToSay, bool blocking = true) {
@@ -13,7 +12,7 @@ public static class Dialogue {
             //Debug.Log("dialouge already in progress");
             //return null;
         }
-        if (blocking) blocking = true;
+        if (blocking) Game.InDialogue();
 
         GameObject newDialogue = new GameObject();
         dialogue = newDialogue.AddComponent<DialogueText>();
@@ -31,13 +30,7 @@ public static class Dialogue {
 
     public static void EndDialogue() {
         dialogue.EndDialogue();
-    }
-
-    public static void Block() {
-        blocking = true;
-    }
-    public static void Unblock() {
-        blocking = false;
+        if (Game.inDialogue) Game.EndDialogue();
     }
 
 }

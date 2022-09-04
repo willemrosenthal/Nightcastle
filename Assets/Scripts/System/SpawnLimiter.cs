@@ -13,6 +13,11 @@ public class SpawnLimiter : MonoBehaviour {
     public List<string> npcsThatMustBeDead = new List<string>();
     public List<string> npcsThatMustBeAlive = new List<string>();
 
+    // also conditions based on:
+        // bosses or special enemies defeated
+        // number of normal enemeis defeated, or other random game stats (map %, etc)
+        // items aquired (or not aquired)
+
     [HideInInspector] public bool runOnRespawn = false;
 
     void Awake() {
