@@ -160,9 +160,19 @@ public class Controller2D : RaycastController {
                 if (slopeAngle != collisions.slopeAngleOld) {
                     distToSlopeStart = hit.distance - skinWidth;
                     moveAmount.x -= distToSlopeStart * directionX;
+                    //Debug.Log("happened");
+                    //Debug.Break();
                 }
                 ClimbSlope(ref moveAmount, slopeAngle, hit.normal);
                 moveAmount.x += distToSlopeStart * directionX;
+
+                // make sure we are skin width above the surface
+                Vector2 newRayOrigin = raycastOrigins.bottom + Vector2.right * moveAmount.x + Vector2.up * moveAmount.y;
+                RaycastHit2D newHit = Raycast(newRayOrigin, Vector2.down, skinWidth, collisionMask);
+                if (newHit) {
+                    float yDiff = newHit.distance - skinWidth;
+                    moveAmount.y += -yDiff;
+                }
             }
         }
     }
