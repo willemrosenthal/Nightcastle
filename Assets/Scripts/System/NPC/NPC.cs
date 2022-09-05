@@ -36,6 +36,7 @@ public class NPC : MonoBehaviour {
     SpriteAnim anim;
     Health health;
     Animator animator;
+    Enemy enemy;
 
     void Awake() {
         CheckIfALive();
@@ -48,6 +49,7 @@ public class NPC : MonoBehaviour {
     }
 
     void Start() {
+        enemy = GetComponent<Enemy>();
         health = GetComponent<Health>();
         currentHealth = health.health;
         anim = GetComponent<SpriteAnim>(); 
@@ -55,26 +57,29 @@ public class NPC : MonoBehaviour {
         player = Player.Instance;
         playerInputs = GameManager.Instance.playerInputs;
 
-        if (anim && idle) anim.Play(idle);
+        if (anim && idle && !enemy) anim.Play(idle);
 
         if (facePlayer) FacePlayer();
     }
 
     void Update() {
+
         // dont excute if far away
         if (Vector2.Distance(transform.position, Camera.main.transform.position) > 100) return;
 
         float distToPlayer = Vector2.Distance(player.transform.position, transform.position);
         if (!talking) {
             // interract with npc
-            if (player.controller.collisions.below && playerInputs.D.WasPressed && distToPlayer < 1 && Dialogue.GetDialogue() == null) {
-                dialogue = Dialogue.NewDialogue(text);
+            if (player.controller.collisions.below && (playerInputs.D.WasPressed || playerInputs.DpadUp.WasPressed) && distToPlayer < 1 && Dialogue.GetDialogue() == null) {
+                dialogue = Dialogue.NewDialogue(text, !enemy);
                 talking = true; 
-                animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-                anim.Play(talk);
+                if (!enemy) {
+                    animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+                    anim.Play(talk);
+                }
             }
             // hit
-            if (currentHealth != health.health) {
+            if (currentHealth != health.health && !enemy) {
                 currentHealth = health.health;
                 dialogue = Dialogue.NewDialogue(hitText, false);
                 talking = true;
@@ -83,14 +88,18 @@ public class NPC : MonoBehaviour {
             }
         } 
         else if (talking) {
-            hitTimer -= GTime.deltaTime;
-            if (distToPlayer > talkRange * 1.1f && hitTimer <= 0) dialogue.Interrupt();
-            if (dialogue == null) talking = false;
+            if (dialogue == null) {
+                talking = false;
+            }
+            if (!enemy) {
+                hitTimer -= GTime.deltaTime;
+                if (distToPlayer > talkRange * 1.1f && hitTimer <= 0) dialogue.Interrupt();
 
-            // if talking ends
-            if (talking == false) {
-                animator.updateMode = AnimatorUpdateMode.Normal;
-                anim.Play(idle);
+                // if talking ends
+                if (talking == false) {
+                    animator.updateMode = AnimatorUpdateMode.Normal;
+                    anim.Play(idle);
+                }
             }
         }
 

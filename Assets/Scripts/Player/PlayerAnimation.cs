@@ -34,6 +34,7 @@ public class PlayerAnimation : MonoBehaviour {
     GameObject magicLineObj;
     Vector2 sparkleSmoothVelocity;
     Vector2 lineSmoothVelocity;
+    List<Vector2> lastMagicDirection = new List<Vector2>();
 
     string current;
     Vector2 inputDirection;
@@ -154,28 +155,48 @@ public class PlayerAnimation : MonoBehaviour {
 
     void MakeMagicParticles() {
         if (!magicSparkleObj) {
-            magicSparkleObj = Instantiate(magicSparkle, player.controller.colliderBox.bounds.center, Quaternion.identity);
+            magicSparkleObj = Instantiate(magicSparkle, (Vector3)MagicStartPos() + transform.position, Quaternion.identity);
             magicSparkleObj.transform.parent = transform;
 
         }
         if (!magicLineObj) {
-            magicLineObj = Instantiate(magicLine, player.controller.colliderBox.bounds.center, Quaternion.identity);
+            magicLineObj = Instantiate(magicLine, (Vector3)MagicStartPos() + transform.position, Quaternion.identity);
             magicLineObj.transform.parent = transform;
         }
         // listen for spells
         if (!SpellListener.Instance.listening) SpellListener.Instance.StartListening();
     }
     void MoveMagicParticles(Vector2 input) {
-        Vector2 goalPos = transform.InverseTransformPoint(player.controller.colliderBox.bounds.center) + Vector3.up * 0.25f;
-        if (input.y > 0 && input.x == 0) goalPos += Vector2.up * 0.85f;
-        else if (input.x > 0 && input.y == 0) goalPos += Vector2.right * 0.6f;
-        else if (input.y < 0 && input.x == 0) goalPos += Vector2.down * 0.7f;
-        else if (input.x < 0 && input.y == 0) goalPos += Vector2.left * 0.85f;
+        Vector2 basicPos = MagicStartPos();
+        Vector2 goalPos = basicPos;
+
+        if (input.y > 0 && input.x == 0) {
+            goalPos += Vector2.up * 0.75f;
+        }
+        else if (input.x > 0 && input.y == 0) {
+            goalPos += Vector2.right * 0.75f;
+        }
+        else if (input.y < 0 && input.x == 0) {
+            goalPos += Vector2.down * 0.75f;
+        }
+        else if (input.x < 0 && input.y == 0) {
+            goalPos += Vector2.left * 0.75f;
+        }
+        if ((lastMagicDirection.Count == 0 || lastMagicDirection[lastMagicDirection.Count-1] != goalPos) && goalPos != basicPos) {
+            lastMagicDirection.Add(goalPos);
+        }
         if (magicSparkleObj) {
             magicSparkleObj.transform.localPosition = Vector2.SmoothDamp(magicSparkleObj.transform.localPosition, goalPos, ref sparkleSmoothVelocity, 0.1f);
         }
-        if (magicLineObj) {
-            magicLineObj.transform.localPosition = Vector2.SmoothDamp(magicLineObj.transform.localPosition, goalPos, ref lineSmoothVelocity, 0.1f);
+        if (magicLineObj && lastMagicDirection.Count > 0) {
+            magicLineObj.transform.localPosition = Vector2.SmoothDamp(magicLineObj.transform.localPosition, lastMagicDirection[0], ref lineSmoothVelocity, 0.1f);
+            if (Vector2.Distance(magicLineObj.transform.localPosition, lastMagicDirection[0]) < 0.1f) {
+                lastMagicDirection.RemoveAt(0);
+            }
         }
+    }
+
+    Vector2 MagicStartPos() {
+        return transform.InverseTransformPoint(player.controller.colliderBox.bounds.center) + Vector3.up * 0.25f + Vector3.left * 0.125f;
     }
 }
