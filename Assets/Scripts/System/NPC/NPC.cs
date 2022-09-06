@@ -71,12 +71,7 @@ public class NPC : MonoBehaviour {
         if (!talking) {
             // interract with npc
             if (player.controller.collisions.below && (playerInputs.D.WasPressed || playerInputs.DpadUp.WasPressed) && distToPlayer < 1 && Dialogue.GetDialogue() == null) {
-                dialogue = Dialogue.NewDialogue(text, !enemy);
-                talking = true; 
-                if (!enemy) {
-                    animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-                    anim.Play(talk);
-                }
+                StartDialogue();
             }
             // hit
             if (currentHealth != health.health && !enemy) {
@@ -106,6 +101,18 @@ public class NPC : MonoBehaviour {
         if (facePlayer) FacePlayer();
     }
 
+    public void StartDialogue() {
+        dialogue = Dialogue.NewDialogue(text, !enemy);
+        talking = true; 
+        if (!enemy) {
+            animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+            anim.Play(talk);
+        }
+    }
+
+    public void UpdateText (string newDialogueText = "") {
+        text = newDialogueText;
+    }
 
 
     public void FacePlayer() {
