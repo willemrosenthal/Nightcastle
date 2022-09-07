@@ -37,6 +37,12 @@ public class PlayerAnimation : MonoBehaviour {
     Vector2 lineSmoothVelocity;
     List<Vector2> lastMagicDirection = new List<Vector2>();
 
+    // double jump
+    public GameObject doubleJumpParticle;
+
+    // double jump
+    public GameObject floatingJumpParticle;
+
     string current;
     Vector2 inputDirection;
 

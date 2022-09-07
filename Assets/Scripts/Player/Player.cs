@@ -13,9 +13,9 @@ public class Player : MonoBehaviour {
 	public static Player Instance { get; private set; }
     
     // jumping and move / walking
-    public float moveSpeed = 2.5f;
-    public float jumpHeight = 3.5f;
-    public float timeToJumpApex = 0.4f;
+    float moveSpeed = 2.5f;
+    float jumpHeight = 2.05f;
+    float timeToJumpApex = 0.45f;
     float accelerationTimeAirborne = 0.2f;
     float accelerationTimeGrounded = 0.01f;
 
@@ -24,13 +24,13 @@ public class Player : MonoBehaviour {
     float jumpVelocity;
 
     // variable jump velocity
-    public float minJumpHeight = 1;
+    float minJumpHeight = 1.4f;
     bool jumpHeald;
     float minJumpGravityMultiplier;
 
     // coyote time
     bool coyoteReady;
-    float coyoteTime = 0.13f;
+    float coyoteTime = 0.15f;
     float coyoteTimer;
 
     // sliding down slope
@@ -46,15 +46,27 @@ public class Player : MonoBehaviour {
     /// ABILITIES ///
 
     // wall jump
-    public Vector2 wallJumpClimb = new Vector2(4f, 9f);
-    public Vector2 wallJumpOff = new Vector2(4f, 5f);
-    public Vector2 wallLeap = new Vector2(8f, 9f);
+    Vector2 wallJumpClimb = new Vector2(4f, 9f);
+    Vector2 wallJumpOff = new Vector2(4f, 5f);
+    Vector2 wallLeap = new Vector2(8f, 9f);
     float wallSlideSpeedMax = 0;//1.5f;
     float wallStickTimer;
-    float wallStickTime = 3f/60f;
+    float wallStickTime = 6f/60f;
     float regrabTimer;
     float regrabMinTime = 0.27f;
     int wallDirX;
+
+    // double jump
+    bool doubleJumpReady;
+    float secondJumpVelocity;
+    float doubleJumpPastApexUseTimer;
+    float doubleJumpPastApexUseTime = 0.3f;
+
+    // float jump
+    bool floatingJump;
+    float floatDownFallReduction = 0.15f;
+    float floatDownFallRunReduction = 0.33f;
+    GameObject floatingJumpParticle;
 
     // whip attack
     bool crouchedAttack;
@@ -72,6 +84,8 @@ public class Player : MonoBehaviour {
     // run
     float runTapTime = 0.1f;
     float runTapTimer = 0;
+    float cancelRunWallHitTimer;
+    float cancelRunWallHitTime = 2f/60f;
     int runDir;
 
     [HideInInspector] public Controller2D controller;
@@ -86,6 +100,7 @@ public class Player : MonoBehaviour {
     PlayerInputs playerInputs;
     SpriteRenderer sr;
     SpriteAnim anim;
+    Attack attack;
 
     void Awake() {
         // singleton and if a duplicate, end code here
@@ -108,7 +123,8 @@ public class Player : MonoBehaviour {
         sr = GetComponent<SpriteRenderer>();
         state = GetComponent<State>();
         anim = GetComponent<SpriteAnim>();
-        abilities = GetComponent<PlayerAbilities>();        
+        abilities = GetComponent<PlayerAbilities>();  
+        attack = GetComponent<Attack>();      
     }
 
     void Singleton () {
@@ -133,6 +149,9 @@ public class Player : MonoBehaviour {
 
         // calculate min jump hight diff for variable jump heights
         minJumpGravityMultiplier = jumpHeight / minJumpHeight;
+
+        // dobule jump velocity
+        secondJumpVelocity = jumpVelocity;
     }
 
     void Update() {
@@ -207,10 +226,18 @@ public class Player : MonoBehaviour {
         else if (runDir == -1 && playerInputs.DpadLeft.IsPressed && runTapTimer > 0 && controller.collisions.below) {
             state.EnterState("running");
         }
-        // exit if we hit a wall
-        if ((controller.collisions.right || controller.collisions.left) && state.GetState() == "running") {
-            Debug.Log("should exit run");
-            state.ExitState();
+        // exit if we hit a wall while standing on the ground
+        if ((controller.collisions.right || controller.collisions.left) && state.GetState() == "running" && controller.collisions.below) {
+            cancelRunWallHitTimer -= GTime.deltaTime;
+            // this givse you a frame or two of leeway before caneling you out of a run
+            if (cancelRunWallHitTimer <= 0) {
+                Debug.Log("should exit run");
+                state.ExitState();
+            }
+        }
+        // reste timer
+        else {
+            cancelRunWallHitTimer = cancelRunWallHitTime;
         }
     }
 
@@ -238,7 +265,13 @@ public class Player : MonoBehaviour {
 
     void HandleAttack () {
         // things that prevent you from attacking
-        if (state.CheckState("land")  || state.CheckState("hurt")) return;
+        if (state.CheckState("land")  || state.CheckState("hurt") || state.CheckState("wallGrab")) {
+            // end attack
+             attack.EndAttack();
+             if (spawnedWhipArm) Destroy(spawnedWhipArm);
+             // don't continue
+            return;
+        }
 
         if (!state.CheckState("attack")) {
             if (playerInputs.A.WasPressed) {
@@ -256,6 +289,9 @@ public class Player : MonoBehaviour {
             }
         }
         else {
+            // dont do floating jump if in attack mode
+            floatingJump = false;
+
             // lets you switch between standing and crouch attack, early in the attack animation
             if (animate.anim.GetTime() < 0.15f && state.GetSubstate() == "hold" && (animate.IsPlaying(animate.attackStanding) || animate.IsPlaying(animate.attackCrouching))) {
                 float currentAnimationTime = animate.anim.GetTime();
@@ -302,8 +338,9 @@ public class Player : MonoBehaviour {
         }
 
         // delete whip arm
-        if (spawnedWhipArm && state.GetState() != "attack" || state.GetSubstate() != "looseWhip") Destroy(spawnedWhipArm);
-         
+        if (spawnedWhipArm && state.GetState() != "attack" || state.GetSubstate() != "looseWhip") {
+            Destroy(spawnedWhipArm);
+        } 
     }
 
 
@@ -328,9 +365,10 @@ public class Player : MonoBehaviour {
                 velocity.y = wallLeap.y;
             }
             state.ExitState();
+            doubleJumpReady = true;
         }
         // normal jump
-        if (controller.collisions.below || coyoteTimer > 0) {
+        else if (controller.collisions.below || coyoteTimer > 0) {
             coyoteTimer = 0;
             if (controller.collisions.slidingDownMaxSlope) {
                 velocity.y = jumpVelocity * controller.collisions.slopeNormal.y;
@@ -344,8 +382,22 @@ public class Player : MonoBehaviour {
                 }
             }
         }
+        // double jump
+        else if (doubleJumpReady && abilities.doubleJump && state.GetState() != "hurt") {
+            DoubleJump();
+        }
         // jump button starts in a "held" state
         jumpHeald = true;
+    }
+
+    void DoubleJump() {
+        doubleJumpReady = false;
+        velocity.y = secondJumpVelocity;
+        if (state.GetState() == "running") {
+            velocity.y = secondJumpVelocity * 0.75f;
+        }
+        GameObject particle = Instantiate(animate.doubleJumpParticle, transform.position, Quaternion.identity);
+        particle.transform.localScale = transform.localScale;
     }
 
     public void CoyoteWalJump() {
@@ -356,6 +408,7 @@ public class Player : MonoBehaviour {
     }
 
     public void OnJumpInputUp() {
+        floatingJump = false;
         jumpHeald = false;
     }
 
@@ -365,15 +418,26 @@ public class Player : MonoBehaviour {
 
 
     void CalculateVelocity () {
-        if (state.GetState() != "hurt") {
+        // move
+        if (state.GetState() != "hurt" && state.GetState() != "attack") {
             float runModifier = 1;
             if (state.GetState() == "running") runModifier = 2;
             // movement
             float targetVelocityX = directionalInput.x * moveSpeed * runModifier;
-            velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
+            bool useGroundedAcceloration = (controller.collisions.below || floatingJump);
+            velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (useGroundedAcceloration)?accelerationTimeGrounded:accelerationTimeAirborne);
         }
+
         // gravity
-        float gravityMultiplier = (!controller.collisions.below && !jumpHeald) ? minJumpGravityMultiplier : 1;
+        float gravityMultiplier = 1;
+        // reasons why we fall quickly
+        if (!controller.collisions.below && !jumpHeald || state.GetState() == "hurt" || state.GetState() == "attack") {
+            gravityMultiplier = minJumpGravityMultiplier;
+        }
+        if (floatingJump && state.GetState() != "hurt" && state.GetState() != "attack") {
+            gravityMultiplier = floatDownFallReduction;
+            if (state.GetState() == "running") gravityMultiplier = floatDownFallRunReduction;
+        }
         velocity.y += gravity * GTime.deltaTime * gravityMultiplier;
 
         // coyote
@@ -467,6 +531,21 @@ public class Player : MonoBehaviour {
     }
 
     void HandleJumping() {
+        // if (doubleJumpReady) {
+        //     sr.color = Color.red;
+        // }else sr.color = Color.white;
+
+        // if we are able to double jump, and we are airborne and moving down, limit the time we are able to double jump
+        if (doubleJumpReady && !controller.collisions.below && velocity.y < 0 && doubleJumpPastApexUseTime > 0) {
+            float timeMod = (floatingJump)? 0.35f : 1;
+            doubleJumpPastApexUseTimer -= GTime.deltaTime * timeMod;
+            if (doubleJumpPastApexUseTimer < 0) doubleJumpReady = false;
+        }
+        // recarge doulbe jump
+        if (controller.collisions.below || state.CheckState("wallGrab")) {
+            doubleJumpReady = true;
+            doubleJumpPastApexUseTimer = doubleJumpPastApexUseTime;
+        }
         // jump
         if (playerInputs.S.WasPressed && directionalInput.y < 0) {
             controller.collisions.FallThoughCloud();
@@ -474,10 +553,31 @@ public class Player : MonoBehaviour {
         }
         if (playerInputs.S.WasPressed) OnJumpInputDown();
         if (playerInputs.S.WasReleased) OnJumpInputUp();
-        if (velocity.y < 0) jumpHeald = false;
+        if (velocity.y < 0) {
+            if (jumpHeald && abilities.floatJump && !controller.collisions.below) {
+                floatingJump = true;
+                if (!floatingJumpParticle) {
+                    floatingJumpParticle = Instantiate(animate.floatingJumpParticle, transform.position, Quaternion.identity);
+                    floatingJumpParticle.transform.parent = transform;
+                }
+            }
+            jumpHeald = false;
+        }
+        // end floating jump if grounded
+        if (controller.collisions.below || state.CheckState("wallGrab")) {
+            floatingJump = false;
+        }
+        // kill floating jump particle
+        if (!floatingJump && floatingJumpParticle) {
+            Destroy(floatingJumpParticle);
+        }
     }
 
     bool FallHard() {
+        // no fall time if in float down state
+        if (floatingJump) {
+            fallTime = 0;
+        }
         // count falltime
         if (!controller.collisions.below && velocity.y <= 0) {
             fallTime += GTime.deltaTime;

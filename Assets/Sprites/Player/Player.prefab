@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 1344835152447693987}
   - component: {fileID: 1961507786}
   - component: {fileID: 6712673859174486717}
+  - component: {fileID: 1738902196}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -165,7 +166,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normal: {x: 0.3125, y: 1.3125}
+  jumping: {x: 0.4, y: 1.1}
   crouch: {x: 0.3125, y: 0.75}
+  mouse: {x: 0.3, y: 0.3}
 --- !u!114 &1578839686523931025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,27 +203,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd5229753d9e049ce995a0a5b76bd9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpHeight: 2.05
-  timeToJumpApex: 0.45
-  moveSpeed: 2.5
-  minJumpHeight: 1.4
-  allowWallJump: 0
-  wallJumpClimb: {x: 4, y: 9}
-  wallJumpOff: {x: 4, y: 5}
-  wallLeap: {x: 8, y: 9}
-  wallSlideSpeedMax: 2.5
-  wallStickTime: 0.2
   whipArm: {fileID: 1596009393002309834, guid: 15397c71650e34bb1b60bf69163433a8, type: 3}
   whipArmCrouched: {fileID: 1596009393002309834, guid: 8be884f6b14e84acfbee6d26da187b0b, type: 3}
-  directionalInput: {x: 0, y: 0}
   controller: {fileID: 0}
   health: {fileID: 0}
   state: {fileID: 0}
   playerColliderBox: {fileID: 0}
   animate: {fileID: 0}
   push: {fileID: 0}
-  runOk: 0
-  longJump: 0
+  abilities: {fileID: 0}
 --- !u!114 &1578839686523931019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +263,7 @@ MonoBehaviour:
   casting_up: {fileID: 7400000, guid: 6ce8d55d20cf14b78bba05e81204ab43, type: 2}
   magicSparkle: {fileID: 2021923347623974992, guid: 1100f72acb80c40739097a90598b9267, type: 3}
   magicLine: {fileID: 919493610648698223, guid: 60deb77c08f8c46f7b5122917fd535ac, type: 3}
+  doubleJumpParticle: {fileID: 7133682905569745041, guid: 76807efeec683483eb79a4b8722be61a, type: 3}
   anim: {fileID: 0}
 --- !u!114 &8402398489666501746
 MonoBehaviour:
@@ -336,3 +328,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &1738902196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578839686523931027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0512aed9a98e44e8386ccaa0d9945bfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doubleJump: 1
+  floatJump: 0
+  wallGrab: 1
+  superRun: 0
+  senseEvil: 0
+  bretheUnderwater: 0
+  walkOnWater: 0
+  reverseGravity: 0
+  mouse: 0
+  telepathy: 0

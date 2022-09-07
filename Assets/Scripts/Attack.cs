@@ -36,4 +36,9 @@ public class Attack : MonoBehaviour {
             }
         }
     }
+
+    public void EndAttack() {
+        if (currentAttack) Destroy(currentAttack);
+        attackTimer = 0;
+    }
 }

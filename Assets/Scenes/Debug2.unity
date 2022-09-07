@@ -29054,6 +29054,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1738902196, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
+      propertyPath: floatJump
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578839686523931016, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
+      propertyPath: floatingJumpParticle
+      value: 
+      objectReference: {fileID: 7133682905569745041, guid: 4bf4330cda64d4cd9961abc28305008d, type: 3}
     - target: {fileID: 1578839686523931027, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_Name
       value: Player
@@ -29064,11 +29072,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.658438
+      value: -11.564688
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -11.40625
+      value: 10.125
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.z

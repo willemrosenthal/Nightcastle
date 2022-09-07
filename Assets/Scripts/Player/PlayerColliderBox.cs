@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerColliderBox : MonoBehaviour
 {
     public Vector2 normal = new Vector2(0.4f, 1.3125f);
+    public Vector2 jumping = new Vector2(0.4f, 1.1f);
     public Vector2 crouch = new Vector2(0.4f, 0.75f);
     public Vector2 mouse = new Vector2(0.3f, 0.3f);
 
