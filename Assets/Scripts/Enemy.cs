@@ -154,10 +154,11 @@ public class Enemy : MonoBehaviour {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(spriteBounds.center, spriteBounds.size);
 
-        if (Application.isPlaying) {
+        if (Application.isPlaying && enabled) {
             Gizmos.color = Color.red;
-            if (!controller) Debug.Log(this.name);
-            Gizmos.DrawWireCube(controller.colliderBox.bounds.center, controller.colliderBox.bounds.size);
+            if (controller) {
+                Gizmos.DrawWireCube(controller.colliderBox.bounds.center, controller.colliderBox.bounds.size);
+            }
         }
     }
 }

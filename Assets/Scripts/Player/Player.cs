@@ -483,6 +483,15 @@ public class Player : MonoBehaviour {
 
                 float castDirX = controller.collisions.left ? -1 : 1;
 
+
+                // cast ray down from feet to be sure your not just abive ground. if oyu are, cancel the wall grab
+                Vector2 rayOrigin = new Vector2(controller.colliderBox.bounds.min.x + controller.GetSkinWidth(), controller.colliderBox.bounds.min.y + controller.GetSkinWidth());
+                float third = (controller.colliderBox.bounds.size.x - controller.GetSkinWidth() * 2) / 3;
+                for (int i = 0; i < 3; i++) {
+                    RaycastHit2D downHit = Physics2D.Raycast (rayOrigin + Vector2.right * (i * third), Vector2.down, 0.4f + controller.GetSkinWidth(), controller.collisionMask);
+                    if (downHit) return;
+                }
+
                 // did this as a raycast all to prevent going though solid objcts when already passing though a cloud
                 RaycastHit2D[] hits = Physics2D.BoxCastAll (castCenter, boundsSize, 0, Vector2.right * castDirX, controller.GetSkinWidth(), controller.collisionMask);
                 foreach (RaycastHit2D hit in hits) {

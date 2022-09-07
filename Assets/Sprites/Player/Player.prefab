@@ -140,7 +140,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.65625}
+  m_Offset: {x: 0, y: 0.64}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.39, y: 0.32}
@@ -151,7 +151,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3125, y: 1.3125}
+  m_Size: {x: 0.3125, y: 1.28}
   m_EdgeRadius: 0
 --- !u!114 &5708913426178384169
 MonoBehaviour:
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c6040067f5b4e57b7af89cc2867415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normal: {x: 0.3125, y: 1.3125}
+  normal: {x: 0.3125, y: 1.28}
   jumping: {x: 0.4, y: 1.1}
   crouch: {x: 0.3125, y: 0.75}
   mouse: {x: 0.3, y: 0.3}
@@ -264,6 +264,7 @@ MonoBehaviour:
   magicSparkle: {fileID: 2021923347623974992, guid: 1100f72acb80c40739097a90598b9267, type: 3}
   magicLine: {fileID: 919493610648698223, guid: 60deb77c08f8c46f7b5122917fd535ac, type: 3}
   doubleJumpParticle: {fileID: 7133682905569745041, guid: 76807efeec683483eb79a4b8722be61a, type: 3}
+  floatingJumpParticle: {fileID: 7133682905569745041, guid: 4bf4330cda64d4cd9961abc28305008d, type: 3}
   anim: {fileID: 0}
 --- !u!114 &8402398489666501746
 MonoBehaviour:
@@ -341,12 +342,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doubleJump: 1
-  floatJump: 0
+  floatJump: 1
   wallGrab: 1
   superRun: 0
-  senseEvil: 0
   bretheUnderwater: 0
   walkOnWater: 0
   reverseGravity: 0
   mouse: 0
+  senseEvil: 0
   telepathy: 0
