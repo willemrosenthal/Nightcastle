@@ -53,7 +53,7 @@ public class Player : MonoBehaviour {
     float wallStickTimer;
     float wallStickTime = 3f/60f;
     float regrabTimer;
-    float regrabMinTime = 0.25f;
+    float regrabMinTime = 0.27f;
     int wallDirX;
 
     // whip attack
@@ -327,6 +327,7 @@ public class Player : MonoBehaviour {
                 velocity.x = -wallDirX * wallLeap.x;
                 velocity.y = wallLeap.y;
             }
+            state.ExitState();
         }
         // normal jump
         if (controller.collisions.below || coyoteTimer > 0) {
@@ -396,16 +397,24 @@ public class Player : MonoBehaviour {
 
         // wallsliding should be calculated AFTER gravity
         if (abilities.wallGrab && (controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && regrabTimer < 0) {
-
-
+            
             // if all other conditions are met, try to wall grab
             if (state.GetState() != "wallGrab") {
                 // raycast a box that's half the size of the player to a wall and see if it collides. This means he grabs based on the center of his body
                 Vector2 castCenter = controller.colliderBox.bounds.center;
                 Vector2 boundsSize = controller.colliderBox.bounds.size;
                 boundsSize.x -= controller.GetSkinWidth() * 2;
-                boundsSize.y *= 0.2f;
-                castCenter.y += controller.colliderBox.bounds.size.y * 0.3f;
+                boundsSize.y *= 0.1f;
+                castCenter.y += controller.colliderBox.bounds.size.y * 0.15f;
+
+                /*// debug, draw collider
+                Bounds b = new Bounds (castCenter, boundsSize);
+                Debug.DrawLine(new Vector2(b.min.x, b.min.y), new Vector2(b.max.x, b.min.y), new Color(0.5f,1f,0,1));
+                Debug.DrawLine(new Vector2(b.max.x, b.min.y), new Vector2(b.max.x, b.max.y), new Color(0.5f,1f,0,1));
+                Debug.DrawLine(new Vector2(b.max.x, b.max.y), new Vector2(b.min.x, b.max.y), new Color(0.5f,1f,0,1));
+                Debug.DrawLine(new Vector2(b.min.x, b.max.y), new Vector2(b.min.x, b.min.y), new Color(0.5f,1f,0,1));
+                */
+
                 float castDirX = controller.collisions.left ? -1 : 1;
 
                 // did this as a raycast all to prevent going though solid objcts when already passing though a cloud
