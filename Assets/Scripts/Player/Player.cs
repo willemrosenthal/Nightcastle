@@ -299,11 +299,13 @@ public class Player : MonoBehaviour {
                     animate.PlayAnimation(animate.attackStanding);
                     animate.anim.SetTime(currentAnimationTime);
                     crouchedAttack = false;
+                    playerColliderBox.SetSize();
                 }
                 else if (!crouchedAttack && directionalInput.y < 0) {
                     animate.PlayAnimation(animate.attackCrouching);
                     animate.anim.SetTime(currentAnimationTime);
                     crouchedAttack = true;
+                    playerColliderBox.SetSize("crouch");
                 }
             }
             if (playerInputs.A.WasReleased) {

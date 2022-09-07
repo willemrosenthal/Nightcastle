@@ -72,7 +72,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitMask:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 896
   damge: 1
   playerAttack: 1
   hitParticle: {fileID: 3753944521957515731, guid: b8f43a891261d487ba1d1e8f008fed03, type: 3}
+  minRehitWait: 0.33
