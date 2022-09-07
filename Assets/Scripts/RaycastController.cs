@@ -80,6 +80,10 @@ public class RaycastController : MonoBehaviour {
         verticalRaySpacing = bounds.size.x / (verticalRayCount - 1);
     }
 
+    public float GetSkinWidth() {
+        return skinWidth;
+    }
+
     public struct RaycastOrigins {
         public Vector2 bottom, top;
         public Vector2 topLeft, topRight;

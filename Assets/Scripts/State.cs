@@ -37,6 +37,9 @@ public class State : MonoBehaviour {
     public string GetState() {
         return state;
     }
+    public bool CheckState(string _stateCheck) {
+        return state == _stateCheck;
+    }
     public void ExitState() {
         EnterState("normal");
     }

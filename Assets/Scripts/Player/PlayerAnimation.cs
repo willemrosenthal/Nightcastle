@@ -28,6 +28,7 @@ public class PlayerAnimation : MonoBehaviour {
     public AnimationClip casting_right;
     public AnimationClip casting_up;
 
+    // magic effects
     public GameObject magicSparkle;
     public GameObject magicLine;
     GameObject magicSparkleObj;
@@ -45,10 +46,10 @@ public class PlayerAnimation : MonoBehaviour {
     State state;
 
     void Start() {
-        player = GetComponent<Player>();
+        player = Player.Instance;
+        state = player.state;
+        controller = player.controller;
         anim = GetComponent<SpriteAnim>();
-        controller = GetComponent<Controller2D>();
-        state = GetComponent<State>();
     }
 
     public void HandleAnimations(Vector2 velocity, Vector2 input) {
@@ -63,18 +64,19 @@ public class PlayerAnimation : MonoBehaviour {
 
             // jump
             if (velocity.y > 0) {
-                player.state.EnterState("jump");
-                if (player.longJump) PlayAnimation(jumpLong);
+                //state.EnterState("jump");
+                if (state.CheckState("running")) PlayAnimation(jumpLong);
                 else PlayAnimation (jump);
                 FaceInputDir();
             }
             // fall
             else {
-                player.state.EnterState("fall");
+                //player.state.EnterState("fall");
                 PlayAnimation (fall);
                 FaceInputDir();
             }
         }
+        // grounded
         else {
             // while you are attacking, only do that
             if (state.GetState() == "attack") return;
@@ -93,10 +95,17 @@ public class PlayerAnimation : MonoBehaviour {
             }
             // walk
             else if (input.x != 0) {
-                if (player.push.pushing) PlayAnimation (push);
-                else if ((player.runOk || IsPlaying(run)) && !player.controller.collisions.left && !player.controller.collisions.right) PlayAnimation(run);
-                else PlayAnimation (walk);
-                player.state.EnterState("walk");
+                if (player.push.pushing) {
+                    state.EnterState("push");
+                    PlayAnimation (push);
+                }
+                else if (player.state.GetState() == "running") {
+                    PlayAnimation(run);
+                }
+                else {
+                    PlayAnimation (walk);
+                    state.EnterState("walk");
+                }
                 FaceInputDir();
             }
             // crouch
@@ -111,8 +120,7 @@ public class PlayerAnimation : MonoBehaviour {
                 player.state.EnterState("idle");
                 PlayAnimation (idle);
             }
-
-            // kill the sparkle
+            // kill the casting sparkles sparkle
             if (player.state.GetState() != "casting" && magicSparkleObj) {
                 Destroy(magicSparkleObj);
                 Destroy(magicLineObj);

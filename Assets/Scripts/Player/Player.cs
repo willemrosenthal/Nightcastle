@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PowerTools;
 
 [RequireComponent (typeof (Controller2D))]
 [RequireComponent (typeof (Health))]
@@ -11,35 +12,52 @@ public class Player : MonoBehaviour {
     // singleton
 	public static Player Instance { get; private set; }
     
-    // jumping
+    // jumping and move / walking
+    public float moveSpeed = 2.5f;
     public float jumpHeight = 3.5f;
     public float timeToJumpApex = 0.4f;
     float accelerationTimeAirborne = 0.2f;
     float accelerationTimeGrounded = 0.01f;
-    public float moveSpeed = 2.5f;
 
-    // coyote time
-    bool coyoteReady;
-    float coyoteTime = 0.13f;
-    float coyoteTimer;
+    // gravity and jump internal variables
+    float gravity;
+    float jumpVelocity;
 
     // variable jump velocity
     public float minJumpHeight = 1;
     bool jumpHeald;
     float minJumpGravityMultiplier;
 
+    // coyote time
+    bool coyoteReady;
+    float coyoteTime = 0.13f;
+    float coyoteTimer;
+
+    // sliding down slope
+    bool slidingDownMaxSlope;
+
+    // velocity
+    Vector3 velocity;
+    float velocityXSmoothing;
+
+    // input
+    Vector2 directionalInput;
+
+    /// ABILITIES ///
+
     // wall jump
-    public bool allowWallJump = true;
     public Vector2 wallJumpClimb = new Vector2(4f, 9f);
     public Vector2 wallJumpOff = new Vector2(4f, 5f);
     public Vector2 wallLeap = new Vector2(8f, 9f);
-
-    public float wallSlideSpeedMax = 1.5f;
-    public float wallStickTime = 0.2f;
-    float timeToWallUnstick;
+    float wallSlideSpeedMax = 0;//1.5f;
+    float wallStickTimer;
+    float wallStickTime = 3f/60f;
+    float regrabTimer;
+    float regrabMinTime = 0.25f;
+    int wallDirX;
 
     // whip attack
-    bool crouched;
+    bool crouchedAttack;
     public GameObject whipArm;
     public GameObject whipArmCrouched;
     GameObject spawnedWhipArm;
@@ -47,25 +65,14 @@ public class Player : MonoBehaviour {
     // casting
     int previousFacingDir;
 
-    // gravity and jump internal variables
-    float gravity;
-    float jumpVelocity;
-
     // fall hard landing
     float fallTime;
     float longFallTime = 0.55f;
 
-    // velocity
-    Vector3 velocity;
-    float velocityXSmoothing;
-
-    [HideInInspector] public Vector2 directionalInput;
-    bool wallSliding;
-    int wallDirX;
-
-    // sliding down slope
-    bool slidingDownMaxSlope;
-
+    // run
+    float runTapTime = 0.1f;
+    float runTapTimer = 0;
+    int runDir;
 
     [HideInInspector] public Controller2D controller;
     [HideInInspector] public Health health;
@@ -73,10 +80,12 @@ public class Player : MonoBehaviour {
     [HideInInspector] public PlayerColliderBox playerColliderBox;
     [HideInInspector] public PlayerAnimation animate;
     [HideInInspector] public Push push;
+    [HideInInspector] public PlayerAbilities abilities;
 
     GameManager gm;
     PlayerInputs playerInputs;
     SpriteRenderer sr;
+    SpriteAnim anim;
 
     void Awake() {
         // singleton and if a duplicate, end code here
@@ -84,8 +93,22 @@ public class Player : MonoBehaviour {
 		if (Instance != this) return;
         
         // get refs
+        GetRefs();
+    }
+
+    void GetRefs() {
         gm = GameManager.Instance;
         playerInputs = gm.playerInputs;
+
+        animate = GetComponent<PlayerAnimation>();
+        health = GetComponent<Health> ();
+        controller = GetComponent<Controller2D> ();
+        playerColliderBox = GetComponent<PlayerColliderBox>();
+        push = GetComponent<Push>();
+        sr = GetComponent<SpriteRenderer>();
+        state = GetComponent<State>();
+        anim = GetComponent<SpriteAnim>();
+        abilities = GetComponent<PlayerAbilities>();        
     }
 
     void Singleton () {
@@ -99,15 +122,10 @@ public class Player : MonoBehaviour {
 	}
 
     void Start() {
-        state = GetComponent<State> ();
-        health = GetComponent<Health> ();
-        controller = GetComponent<Controller2D> ();
-        animate = GetComponent<PlayerAnimation> ();
-        playerColliderBox = GetComponent<PlayerColliderBox>();
-        push = GetComponent<Push>();
-        sr = GetComponent<SpriteRenderer>();
-        //controller.SetDistBetweenRays(0.25f); // sets rays super close for player
+        CalculateJumpVelocity();
+    }
 
+    void CalculateJumpVelocity () {
         // calculate gravity based on desired jump height and time
         gravity = -(2 * jumpHeight) / Mathf.Pow (timeToJumpApex, 2);
         World.SetGravity(gravity);
@@ -126,13 +144,14 @@ public class Player : MonoBehaviour {
         // get directional input
         directionalInput = playerInputs.Dpad;
 
-        // invincibility
-        if (health.IsInvincible() && state.GetState() != "hurt") {
-            sr.enabled = !sr.enabled;
-        } else sr.enabled = true;
+        // invincibility flashing
+        InvincibilityFlashing();
 
+        // movement and gravity
         CalculateVelocity();
-        HandleWallSliding();
+
+        // abilities
+        HandleWallGrab();
         HandleJumping();
         HandleAttack();
         HandleHurt();
@@ -143,8 +162,21 @@ public class Player : MonoBehaviour {
             return;
         }
 
+        // MOVE AND APPLY GRAVITY
         controller.Move(velocity * GTime.deltaTime);
 
+        SlidingDownSlope();
+
+        animate.HandleAnimations(velocity, directionalInput);
+    }
+
+    void InvincibilityFlashing () {
+        if (health.IsInvincible() && state.GetState() != "hurt") {
+            sr.enabled = !sr.enabled;
+        } else sr.enabled = true;
+    }
+
+    void SlidingDownSlope() {
         if (controller.collisions.above || controller.collisions.below) {
             if (controller.collisions.slidingDownMaxSlope) {
                 if (!slidingDownMaxSlope) velocity.y = 0; //*= 0.15f; // if you already have a high velocity downward - reduce it on collision with slope before sliding
@@ -155,33 +187,31 @@ public class Player : MonoBehaviour {
             }
         }
         slidingDownMaxSlope = controller.collisions.slidingDownMaxSlope;
-
-        animate.HandleAnimations(velocity, directionalInput);
     }
 
-    float runTapTime = 0.1f;
-    float runTapTimer = 0;
-    int runDir;
-    [HideInInspector] public bool runOk;
-    [HideInInspector] public bool longJump;
     void HandleRun () {
         runTapTimer -= GTime.deltaTime;
         if (playerInputs.DpadRight.WasReleased) {
             runDir = 1;
             runTapTimer = runTapTime;
+            if (state.CheckState("running")) state.ExitState();
         } 
         if (playerInputs.DpadLeft.WasReleased) {
             runDir = -1;
             runTapTimer = runTapTime;
+            if (state.CheckState("running")) state.ExitState();
         } 
         if (runDir == 1 && playerInputs.DpadRight.IsPressed && runTapTimer > 0 && controller.collisions.below) {
-            runOk = true;
+            state.EnterState("running");
         }
         else if (runDir == -1 && playerInputs.DpadLeft.IsPressed && runTapTimer > 0 && controller.collisions.below) {
-            runOk = true;
+            state.EnterState("running");
         }
-        //else if (runOk && ((runDir == -1 && playerInputs.DpadLeft.IsPressed) || (runDir == 1 && playerInputs.DpadRight.IsPressed)) && state.GetState() == "fall") runOk = true;
-        else runOk = false;
+        // exit if we hit a wall
+        if ((controller.collisions.right || controller.collisions.left) && state.GetState() == "running") {
+            Debug.Log("should exit run");
+            state.ExitState();
+        }
     }
 
     void HandleCasting () {
@@ -208,17 +238,17 @@ public class Player : MonoBehaviour {
 
     void HandleAttack () {
         // things that prevent you from attacking
-        if (state.GetState() == "land" || state.GetState() == "hurt" ) return;
+        if (state.CheckState("land")  || state.CheckState("hurt")) return;
 
-        if (state.GetState() != "attack") {
+        if (!state.CheckState("attack")) {
             if (playerInputs.A.WasPressed) {
-                if (state.GetState() == "crouch") {
-                    crouched = true;
+                if (state.CheckState("crouch")) {
+                    crouchedAttack = true;
                     animate.PlayAnimation(animate.attackCrouching);
                     playerColliderBox.SetSize("crouch");
                 }
                 else {
-                    crouched = false;
+                    crouchedAttack = false;
                     animate.PlayAnimation(animate.attackStanding);
                 }
                 state.EnterState("attack");
@@ -229,15 +259,15 @@ public class Player : MonoBehaviour {
             // lets you switch between standing and crouch attack, early in the attack animation
             if (animate.anim.GetTime() < 0.15f && state.GetSubstate() == "hold" && (animate.IsPlaying(animate.attackStanding) || animate.IsPlaying(animate.attackCrouching))) {
                 float currentAnimationTime = animate.anim.GetTime();
-                if (crouched && directionalInput.y >= 0) {
+                if (crouchedAttack && directionalInput.y >= 0) {
                     animate.PlayAnimation(animate.attackStanding);
                     animate.anim.SetTime(currentAnimationTime);
-                    crouched = false;
+                    crouchedAttack = false;
                 }
-                else if (!crouched && directionalInput.y < 0) {
+                else if (!crouchedAttack && directionalInput.y < 0) {
                     animate.PlayAnimation(animate.attackCrouching);
                     animate.anim.SetTime(currentAnimationTime);
-                    crouched = true;
+                    crouchedAttack = true;
                 }
             }
             if (playerInputs.A.WasReleased) {
@@ -246,7 +276,7 @@ public class Player : MonoBehaviour {
             if (!animate.IsPlaying(animate.attackStanding) && !animate.IsPlaying(animate.attackCrouching) && state.GetSubstate() != "looseWhip") {
                 if (state.GetSubstate() == "hold") {
                     state.EnterSubstate("looseWhip");
-                    if (crouched) {
+                    if (crouchedAttack) {
                         animate.PlayAnimation(animate.whipHoldCrouching);
                         spawnedWhipArm = Instantiate(whipArmCrouched, transform.position, Quaternion.identity);
                     }
@@ -276,28 +306,29 @@ public class Player : MonoBehaviour {
          
     }
 
-    public void SpawnWhipArm() {
-    }
 
     public void OnJumpInputDown() {
         Debug.Log("JUMP ATTEMPT: " + controller.collisions.below);
-        if (wallSliding) {
+        // sliding
+        if (state.GetState() == "wallGrab") {
             // fall off wall
             if (directionalInput.x == 0) {
                 velocity.x = -wallDirX * wallJumpOff.x;
                 velocity.y = wallJumpOff.y;
+                Invoke("CoyoteWalJump", 1f/60f);
             }
             // climb jump
             else if (wallDirX == Mathf.Sign(directionalInput.x)) {
                 velocity.x = -wallDirX * wallJumpClimb.x;
                 velocity.y = wallJumpClimb.y;
             }
-            // fall off wall
+            // leap off wall
             else {
                 velocity.x = -wallDirX * wallLeap.x;
                 velocity.y = wallLeap.y;
             }
         }
+        // normal jump
         if (controller.collisions.below || coyoteTimer > 0) {
             coyoteTimer = 0;
             if (controller.collisions.slidingDownMaxSlope) {
@@ -307,14 +338,20 @@ public class Player : MonoBehaviour {
             else {
                 velocity.y = jumpVelocity;
                 // long jump
-                if (animate.IsPlaying(animate.run)) {
-                    longJump = true;
+                if (state.GetState() == "running") {
                     velocity.y = jumpVelocity * 0.85f;
                 }
             }
         }
         // jump button starts in a "held" state
         jumpHeald = true;
+    }
+
+    public void CoyoteWalJump() {
+        if (wallStickTime > 0 && wallDirX == Mathf.Sign(directionalInput.x)) {
+            velocity.x = -wallDirX * wallLeap.x;
+            velocity.y = wallLeap.y;
+        }
     }
 
     public void OnJumpInputUp() {
@@ -329,7 +366,7 @@ public class Player : MonoBehaviour {
     void CalculateVelocity () {
         if (state.GetState() != "hurt") {
             float runModifier = 1;
-            if (animate.IsPlaying(animate.run) || longJump) runModifier = 2;
+            if (state.GetState() == "running") runModifier = 2;
             // movement
             float targetVelocityX = directionalInput.x * moveSpeed * runModifier;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
@@ -350,47 +387,77 @@ public class Player : MonoBehaviour {
         }
     }
 
-    void HandleWallSliding() {
+    void HandleWallGrab() {
         // for wall climbing
         wallDirX = (controller.collisions.left)? -1 : 1;
 
-        // wallsliding should be calculated AFTER gravity
-        wallSliding = false;
-        if (allowWallJump && (controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0) {
-            wallSliding = true;
+        // regrab timer prevets you from instantly re-grabbing the wall
+        regrabTimer -= GTime.deltaTime;
 
-            if (velocity.y < -wallSlideSpeedMax) {
-                velocity.y = -wallSlideSpeedMax;
+        // wallsliding should be calculated AFTER gravity
+        if (abilities.wallGrab && (controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && regrabTimer < 0) {
+
+
+            // if all other conditions are met, try to wall grab
+            if (state.GetState() != "wallGrab") {
+                // raycast a box that's half the size of the player to a wall and see if it collides. This means he grabs based on the center of his body
+                Vector2 castCenter = controller.colliderBox.bounds.center;
+                Vector2 boundsSize = controller.colliderBox.bounds.size;
+                boundsSize.x -= controller.GetSkinWidth() * 2;
+                boundsSize.y *= 0.2f;
+                castCenter.y += controller.colliderBox.bounds.size.y * 0.3f;
+                float castDirX = controller.collisions.left ? -1 : 1;
+
+                // did this as a raycast all to prevent going though solid objcts when already passing though a cloud
+                RaycastHit2D[] hits = Physics2D.BoxCastAll (castCenter, boundsSize, 0, Vector2.right * castDirX, controller.GetSkinWidth(), controller.collisionMask);
+                foreach (RaycastHit2D hit in hits) {
+                    if (hit) {
+                        if (hit.collider.tag == "Cloud" || hit.distance == 0) {
+                            continue;
+                        }
+                        state.EnterState("wallGrab");
+                        break;
+                    }
+                }
             }
 
-            if (timeToWallUnstick > 0) {
+            // if we are wall grabbing
+            if (state.GetState() == "wallGrab") {
+                // cancel out y velocity
+                if (velocity.y < -wallSlideSpeedMax) {
+                    velocity.y = -wallSlideSpeedMax;
+                }
+                
+                // reset smoothing
                 velocityXSmoothing = 0;
                 velocity.x = wallDirX * 0.01f;
 
+                // reset fall time
+                fallTime = 0;
+
+                // holding opposite dir from wall
                 if (Mathf.Sign(directionalInput.x) != wallDirX && directionalInput.x != 0) {
-                    timeToWallUnstick -= GTime.deltaTime;
+                    wallStickTimer -= GTime.deltaTime;
+                    if (wallStickTimer <= 0) {
+                        velocity.x = directionalInput.x * moveSpeed;
+                        state.ExitState();
+                    }
                 }
-                else{
-                    timeToWallUnstick = wallStickTime;
+                else {
+                    wallStickTimer = wallStickTime;
                 }
-            }
-            else {
-                timeToWallUnstick = wallStickTime;
+
+                // fall down if you tap down
+                if (directionalInput.y < 0) {
+                    velocity.x = 0;
+                    regrabTimer = regrabMinTime;
+                    state.ExitState();
+                }
             }
         } 
     }
 
     void HandleJumping() {
-        // cancel long jump
-        if (controller.collisions.below && longJump) {
-            longJump = false;
-            // lets you continue with a run after landing
-            if (directionalInput.x != 0 && runDir == Mathf.Sign(directionalInput.x)) {
-                runOk = true;
-                runTapTimer = runTapTime;
-            }
-        }
-
         // jump
         if (playerInputs.S.WasPressed && directionalInput.y < 0) {
             controller.collisions.FallThoughCloud();
@@ -399,7 +466,6 @@ public class Player : MonoBehaviour {
         if (playerInputs.S.WasPressed) OnJumpInputDown();
         if (playerInputs.S.WasReleased) OnJumpInputUp();
         if (velocity.y < 0) jumpHeald = false;
-
     }
 
     bool FallHard() {

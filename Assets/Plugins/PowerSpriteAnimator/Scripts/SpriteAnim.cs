@@ -50,6 +50,18 @@ public class SpriteAnim : SpriteAnimEventHandler
 	#region Funcs: Properties
 
 
+	// MY ADDITIONS
+	string currentAnimationName;
+
+	public void PlayAnimation ( AnimationClip clip, bool overrideStoppedCurrent = false, bool overrideSame = false, float speed = 1 ) {
+        if ((currentAnimationName != clip.name || overrideStoppedCurrent) && !overrideSame && !IsPlaying(clip)) {
+            Play(clip, speed);
+        }
+        else if (overrideSame) {
+            Play(clip, speed);
+        }
+    }
+
 	/// True if an animation is currently playing (even if paused)
 	public bool Playing { get { return IsPlaying(); } }
 
@@ -109,6 +121,9 @@ public class SpriteAnim : SpriteAnimEventHandler
 		m_animator.speed = m_speed;
 		m_currAnim = anim;
 		m_animator.Update(0.0f); // Update so that normalized time is updated immediately
+
+		// update current animation name
+		currentAnimationName = anim.name;
 	}		 	 
 
 	/// Stops the clip by disabling the animator
