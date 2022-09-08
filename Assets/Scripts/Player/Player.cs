@@ -347,7 +347,7 @@ public class Player : MonoBehaviour {
 
 
     public void OnJumpInputDown() {
-        Debug.Log("JUMP ATTEMPT: " + controller.collisions.below);
+        // Debug.Log("JUMP ATTEMPT: " + controller.collisions.below);
         // sliding
         if (state.GetState() == "wallGrab") {
             // fall off wall

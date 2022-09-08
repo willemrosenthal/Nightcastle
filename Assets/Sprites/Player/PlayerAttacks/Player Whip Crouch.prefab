@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 790518361526326105}
   - component: {fileID: 8602884423735167157}
   - component: {fileID: 8795701310769458297}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Whip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 9174017011150939362}
   - component: {fileID: 3298898117532143371}
   - component: {fileID: 3810413708821230400}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: WhipHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5685142871493143903}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Player Whip Crouch
   m_TagString: Untagged
   m_Icon: {fileID: 0}

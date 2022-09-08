@@ -46,7 +46,6 @@ public class DialogueLine : MonoBehaviour {
     }
 
     public void StartWriting(bool useDropShadow = true) {
-        Debug.Log("start writing called");
         Show();
         writing = true;
         if (useDropShadow) dropShadow.enabled = true;

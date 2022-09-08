@@ -198,7 +198,6 @@ public class DialogueText : MonoBehaviour {
             _textToTest += textToWrite[_current];
             _lineWidth = testLine.GetLineWidth(_textToTest);
             if (textToWrite[_current] + "" == " ") _lastSpace = _current;
-            Debug.Log(textToWrite[_current].ToString() == "\n");
             _current++;
 
             // if we exceed the line size
