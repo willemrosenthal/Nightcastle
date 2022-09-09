@@ -56,6 +56,12 @@ public class InWater : MonoBehaviour {
                 floating = true;
 
                 boyantVelocity += boyantGravity * GTime.deltaTime * depth * 2;
+
+                // lets you get your footing better
+                if (controller.collisions.below && boyantVelocity > 0 && depth < 0.12f) {
+                    boyantVelocity = 0;
+                }
+
                 controller.Move(Vector2.up * boyantVelocity * GTime.deltaTime);
                 
                 if (velocity.y < 0.5f) {

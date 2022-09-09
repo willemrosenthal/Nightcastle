@@ -219,4 +219,8 @@ public class PlayerAnimation : MonoBehaviour {
     Vector2 MagicStartPos() {
         return transform.InverseTransformPoint(player.controller.colliderBox.bounds.center) + Vector3.up * 0.25f + Vector3.left * 0.125f;
     }
+
+    public string GetCurrentClipName() {
+        return current;
+    }
 }
