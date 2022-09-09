@@ -4,11 +4,11 @@ using UnityEngine;
 using PowerTools;
 
 [RequireComponent (typeof (Controller2D))]
+[RequireComponent (typeof (Velocity))]
 public class WorldObject : MonoBehaviour {
 
     public bool checkCollisionWithPlayer = false;
     public bool pushable = false;
-    Vector2 velocity;
 
     // collisions with player
     bool collidingWithPlayer;
@@ -19,6 +19,7 @@ public class WorldObject : MonoBehaviour {
     [HideInInspector] public SpriteAnim spriteAnim;
     [HideInInspector] public Health health;
     [HideInInspector] public Gravity gravity;
+    [HideInInspector] public Velocity velocity;
 
     // external references
     [HideInInspector] public CameraBounds cameraBounds;
@@ -35,6 +36,7 @@ public class WorldObject : MonoBehaviour {
         // get potential refs
         health = GetComponent<Health>();
         gravity = GetComponent<Gravity>();
+        velocity = GetComponent<Velocity>();
     }
 
     void Update() {
@@ -42,7 +44,7 @@ public class WorldObject : MonoBehaviour {
         if (Vector2.Distance(transform.position, Camera.main.transform.position) > 100) return;
 
         // Gravity
-        if (gravity) gravity.ApplyGravity(ref velocity);
+        if (gravity) gravity.ApplyGravity();
 
         // where enemy code is written
         ObjectUpdate();
@@ -51,7 +53,7 @@ public class WorldObject : MonoBehaviour {
         if (checkCollisionWithPlayer) PlayerCollisions();
 
         // move enemy
-        controller.Move(velocity * GTime.deltaTime);
+        controller.Move(velocity.v * GTime.deltaTime);
     }
 
     // put update content here

@@ -7,6 +7,9 @@ using PowerTools;
 [RequireComponent (typeof (Health))]
 [RequireComponent (typeof (PlayerAnimation))]
 [RequireComponent (typeof (State))]
+[RequireComponent (typeof (Velocity))]
+[RequireComponent (typeof (Push))]
+[RequireComponent (typeof (InWater))]
 public class Player : MonoBehaviour {
 
     // singleton
@@ -37,7 +40,7 @@ public class Player : MonoBehaviour {
     bool slidingDownMaxSlope;
 
     // velocity
-    Vector3 velocity;
+    //Vector3 velocity;
     float velocityXSmoothing;
 
     // input
@@ -94,14 +97,15 @@ public class Player : MonoBehaviour {
     [HideInInspector] public PlayerColliderBox playerColliderBox;
     [HideInInspector] public PlayerAnimation animate;
     [HideInInspector] public Push push;
+    [HideInInspector] public Velocity velocity;
     [HideInInspector] public PlayerAbilities abilities;
+    [HideInInspector] public InWater water;
 
     GameManager gm;
     PlayerInputs playerInputs;
     SpriteRenderer sr;
     SpriteAnim anim;
     Attack attack;
-    InWater inWater;
 
     void Awake() {
         // singleton and if a duplicate, end code here
@@ -126,7 +130,8 @@ public class Player : MonoBehaviour {
         anim = GetComponent<SpriteAnim>();
         abilities = GetComponent<PlayerAbilities>();  
         attack = GetComponent<Attack>();     
-        inWater = GetComponent<InWater>(); 
+        water = GetComponent<InWater>();    
+        velocity = GetComponent<Velocity>(); 
     }
 
     void Singleton () {
@@ -184,11 +189,11 @@ public class Player : MonoBehaviour {
         }
 
         // MOVE AND APPLY GRAVITY
-        controller.Move(velocity * GTime.deltaTime);
+        controller.Move(velocity.v * GTime.deltaTime);
 
         SlidingDownSlope();
 
-        animate.HandleAnimations(velocity, directionalInput);
+        animate.HandleAnimations(velocity.v, directionalInput);
     }
 
     void InvincibilityFlashing () {
@@ -260,7 +265,7 @@ public class Player : MonoBehaviour {
     void HandleHurt () {
         if (health.Histop() && state.GetState() != "hurt") {
             state.EnterState("hurt");
-            velocity = new Vector2 (transform.localScale.x * -2, jumpVelocity * 0.65f);
+            velocity.v = new Vector2 (transform.localScale.x * -2, jumpVelocity * 0.65f);
             animate.PlayAnimation(animate.hurt);
         }
     }
@@ -369,10 +374,10 @@ public class Player : MonoBehaviour {
                 velocity.y = wallLeap.y;
             }
             state.ExitState();
-            doubleJumpReady = true;
+            SetDoubleJumpReady();
         }
         // normal jump
-        else if (controller.collisions.below || coyoteTimer > 0) {
+        else if (controller.collisions.below || coyoteTimer > 0 || (water.inWater && water.jumpOk)) {
             coyoteTimer = 0;
             if (controller.collisions.slidingDownMaxSlope) {
                 velocity.y = jumpVelocity * controller.collisions.slopeNormal.y;
@@ -385,6 +390,9 @@ public class Player : MonoBehaviour {
                     velocity.y = jumpVelocity * 0.85f;
                 }
             }
+            if (water.inWater && water.jumpOk) {
+                SetDoubleJumpReady();
+            }
         }
         // double jump
         else if (doubleJumpReady && abilities.doubleJump && state.GetState() != "hurt") {
@@ -392,6 +400,11 @@ public class Player : MonoBehaviour {
         }
         // jump button starts in a "held" state
         jumpHeald = true;
+    }
+
+    void SetDoubleJumpReady() {
+        doubleJumpReady = true;
+        doubleJumpPastApexUseTimer = doubleJumpPastApexUseTime;
     }
 
     void DoubleJump() {
@@ -415,11 +428,6 @@ public class Player : MonoBehaviour {
         floatingJump = false;
         jumpHeald = false;
     }
-
-    public Vector2 GetVelocity () {
-        return velocity;
-    }
-
 
     void CalculateVelocity () {
         // move
@@ -445,7 +453,7 @@ public class Player : MonoBehaviour {
 
         // in water, dampen gravity
         float inWaterDampen = 1;
-        if (inWater.inWater) inWaterDampen = inWater.dampenGravity;
+        if (water.inWater) inWaterDampen = water.dampenGravity;
 
         velocity.y += gravity * GTime.deltaTime * gravityMultiplier * inWaterDampen;
 
@@ -557,12 +565,14 @@ public class Player : MonoBehaviour {
         if (doubleJumpReady && !controller.collisions.below && velocity.y < 0 && doubleJumpPastApexUseTime > 0) {
             float timeMod = (floatingJump)? 0.35f : 1;
             doubleJumpPastApexUseTimer -= GTime.deltaTime * timeMod;
-            if (doubleJumpPastApexUseTimer < 0) doubleJumpReady = false;
+            if (doubleJumpPastApexUseTimer < 0) {
+                doubleJumpReady = false;
+                Debug.Log("double jump timed out");
+            }
         }
         // recarge doulbe jump
         if (controller.collisions.below || state.CheckState("wallGrab")) {
-            doubleJumpReady = true;
-            doubleJumpPastApexUseTimer = doubleJumpPastApexUseTime;
+            SetDoubleJumpReady();
         }
         // jump
         if (playerInputs.S.WasPressed && directionalInput.y < 0) {

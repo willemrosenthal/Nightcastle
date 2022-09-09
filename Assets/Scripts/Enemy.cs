@@ -7,6 +7,7 @@ using PowerTools;
 [RequireComponent (typeof (SpriteAnim))]
 [RequireComponent (typeof (Controller2D))]
 [RequireComponent (typeof (Health))]
+[RequireComponent (typeof (Velocity))]
 public class Enemy : MonoBehaviour {
     // all objects should track what camera zone they are in. If the palyer leaves that zone, they should despawn (or reset)
 
@@ -22,8 +23,6 @@ public class Enemy : MonoBehaviour {
     public Vector2 hitstopShake = new Vector2(1f,0);
     int shakeDir = 1;
 
-    Vector2 velocity;
-
     // internal values
     [HideInInspector] public bool activated;
     [HideInInspector] public Bounds spriteBounds;
@@ -37,6 +36,7 @@ public class Enemy : MonoBehaviour {
     [HideInInspector] public SpriteAnim spriteAnim;
     [HideInInspector] public Health health;
     [HideInInspector] public Gravity gravity;
+    [HideInInspector] public Velocity velocity;
 
     // external references
     [HideInInspector] public CameraBounds cameraBounds;
@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour {
         // get potential refs
         health = GetComponent<Health>();
         gravity = GetComponent<Gravity>();
+        velocity = GetComponent<Velocity>();
     }
 
     void Update() {
@@ -66,7 +67,7 @@ public class Enemy : MonoBehaviour {
         }
 
         // Gravity
-        if (gravity) gravity.ApplyGravity(ref velocity);
+        if (gravity) gravity.ApplyGravity();
 
         // Hitstop
         if (health.Histop()) {
@@ -81,7 +82,7 @@ public class Enemy : MonoBehaviour {
         PlayerCollisions();
 
         // move enemy
-        controller.Move(velocity * GTime.deltaTime);
+        controller.Move(velocity.v * GTime.deltaTime);
     }
 
     public virtual void Hitstop() {

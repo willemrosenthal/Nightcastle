@@ -10,10 +10,13 @@ public class Gravity : MonoBehaviour {
     public bool snapToGroundOnStart = false;
     public float initialHangtime = 0;
 
+    Velocity velocity;
+
     void Start() {
         gravity = World.gravity;
         controller = GetComponent<Controller2D>();
         inWater = GetComponent<InWater>();
+        velocity = GetComponent<Velocity>();
         Initilize();
     }
 
@@ -23,7 +26,7 @@ public class Gravity : MonoBehaviour {
         }
     }
 
-    public void ApplyGravity(ref Vector2 velocity) {
+    public void ApplyGravity() {
         // objects hang in air for a moment before gravity takes effect. used in death animations mostly
         if (initialHangtime > 0) {
             initialHangtime -= GTime.deltaTime;

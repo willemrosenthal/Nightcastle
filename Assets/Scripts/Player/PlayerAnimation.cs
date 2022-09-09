@@ -68,8 +68,14 @@ public class PlayerAnimation : MonoBehaviour {
             // while you are attacking, only do that
             if (state.GetState() == "attack") return;
 
+            // if swimming
+            if (player.water.inWater && player.water.boyant && player.water.floating) {
+                state.EnterState("swim");
+                PlayAnimation (fall);
+                FaceInputDir();
+            }
             // jump
-            if (velocity.y > 0) {
+            else if (velocity.y > 0) {
                 //state.EnterState("jump");
                 if (state.CheckState("running")) PlayAnimation(jumpLong);
                 else PlayAnimation (jump);

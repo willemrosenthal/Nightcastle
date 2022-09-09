@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 1961507786}
   - component: {fileID: 6712673859174486717}
   - component: {fileID: 1738902196}
+  - component: {fileID: 2255829221431717000}
+  - component: {fileID: 5452429561776017879}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -140,7 +142,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.64}
+  m_Offset: {x: 0, y: 0.63}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.39, y: 0.32}
@@ -151,7 +153,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3125, y: 1.28}
+  m_Size: {x: 0.3125, y: 1.26}
   m_EdgeRadius: 0
 --- !u!114 &5708913426178384169
 MonoBehaviour:
@@ -165,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c6040067f5b4e57b7af89cc2867415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normal: {x: 0.3125, y: 1.28}
+  normal: {x: 0.3125, y: 1.26}
   jumping: {x: 0.4, y: 1.1}
   crouch: {x: 0.3125, y: 0.75}
   mouse: {x: 0.3, y: 0.3}
@@ -211,7 +213,9 @@ MonoBehaviour:
   playerColliderBox: {fileID: 0}
   animate: {fileID: 0}
   push: {fileID: 0}
+  velocity: {fileID: 0}
   abilities: {fileID: 0}
+  water: {fileID: 0}
 --- !u!114 &1578839686523931019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,3 +355,40 @@ MonoBehaviour:
   mouse: 0
   senseEvil: 0
   telepathy: 0
+  runSetup: 1
+--- !u!114 &2255829221431717000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578839686523931027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
+--- !u!114 &5452429561776017879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578839686523931027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54310084c8764445b8b02bd22706fe26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inWater: 0
+  ySwimPointAdjust: 0.45
+  dampenMovementX: 0.65
+  dampenMovementY: 0.5
+  _dampenGravity: 0.3
+  boyant: 0
+  jumpOk: 0
+  floating: 0
+  water: {fileID: 0}

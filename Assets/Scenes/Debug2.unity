@@ -441,6 +441,7 @@ GameObject:
   - component: {fileID: 72989009}
   - component: {fileID: 72989015}
   - component: {fileID: 72989016}
+  - component: {fileID: 72989017}
   m_Layer: 8
   m_Name: Gargoyle (10)
   m_TagString: Untagged
@@ -484,6 +485,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -632,6 +634,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &72989017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72989008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &74365087
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +713,7 @@ GameObject:
   - component: {fileID: 94198197}
   - component: {fileID: 94198196}
   - component: {fileID: 94198202}
+  - component: {fileID: 94198203}
   m_Layer: 8
   m_Name: Gargoyle (4)
   m_TagString: Untagged
@@ -739,6 +757,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -869,6 +888,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &94198203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94198195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &122253781
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,7 +915,7 @@ GameObject:
   - component: {fileID: 122253783}
   - component: {fileID: 122253782}
   - component: {fileID: 122253785}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Water (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -904,7 +938,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 904
   surfacePixelSize: 1
-  splashParticke: {fileID: 423477294747854568, guid: a39ec76eb340c4602b8d340baa517d58, type: 3}
+  splashParticke: {fileID: 423477294747854568, guid: bc72dc57222694b1b943aa9ff84478fb, type: 3}
   splashPartickeSmall: {fileID: 423477294747854568, guid: 0397e82667de24af9bba8458e2a6fc65, type: 3}
   surfaceMoveParticke: {fileID: 6610350960147134360, guid: d237657a4a540417b95e35b2d979a197, type: 3}
 --- !u!212 &122253783
@@ -966,8 +1000,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122253781}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.6, y: -12.93, z: 0}
-  m_LocalScale: {x: 30, y: 1, z: 1}
+  m_LocalPosition: {x: -8.6, y: -12.03, z: 0}
+  m_LocalScale: {x: 30, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 82
@@ -1055,30 +1089,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
---- !u!1 &164062156 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1578839686523931027, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-  m_PrefabInstance: {fileID: 1578839684709511770}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &164062171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 164062156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54310084c8764445b8b02bd22706fe26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inWater: 0
-  dampenMovementX: 0.65
-  dampenMovementY: 0.5
-  _dampenGravity: 0.3
-  boyant: 0
-  water: {fileID: 0}
-  controller: {fileID: 0}
 --- !u!1 &169500259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1299,6 +1309,7 @@ GameObject:
   - component: {fileID: 197613524}
   - component: {fileID: 197613523}
   - component: {fileID: 197613522}
+  - component: {fileID: 197613529}
   m_Layer: 8
   m_Name: Gargoyle (12)
   m_TagString: Untagged
@@ -1356,6 +1367,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -1472,6 +1484,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 45
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &197613529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197613521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &229658506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1931,6 +1958,7 @@ GameObject:
   - component: {fileID: 326162640}
   - component: {fileID: 326162639}
   - component: {fileID: 326162645}
+  - component: {fileID: 326162646}
   m_Layer: 8
   m_Name: Gargoyle (9)
   m_TagString: Untagged
@@ -1974,6 +2002,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -2104,6 +2133,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &326162646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326162638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &346637774
 GameObject:
   m_ObjectHideFlags: 0
@@ -4446,6 +4490,7 @@ GameObject:
   - component: {fileID: 780252855}
   - component: {fileID: 780252854}
   - component: {fileID: 780252860}
+  - component: {fileID: 780252861}
   m_Layer: 8
   m_Name: Gargoyle (11)
   m_TagString: Untagged
@@ -4489,6 +4534,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -4619,6 +4665,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 1
   pushing: 0
+--- !u!114 &780252861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780252853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1001 &800828075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5084,6 +5145,7 @@ GameObject:
   - component: {fileID: 862682783}
   - component: {fileID: 862682782}
   - component: {fileID: 862682788}
+  - component: {fileID: 862682789}
   m_Layer: 8
   m_Name: Gargoyle (5)
   m_TagString: Untagged
@@ -5127,6 +5189,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -5257,6 +5320,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &862682789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862682781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &875113557
 GameObject:
   m_ObjectHideFlags: 0
@@ -5424,6 +5502,7 @@ GameObject:
   - component: {fileID: 879280532}
   - component: {fileID: 879280531}
   - component: {fileID: 879280530}
+  - component: {fileID: 879280541}
   m_Layer: 9
   m_Name: NPC (8)
   m_TagString: Untagged
@@ -5453,6 +5532,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -5582,7 +5662,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.625}
+  m_Offset: {x: 0, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.35, y: 0}
@@ -5593,7 +5673,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9375, y: 1.25}
+  m_Size: {x: 0.5, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &879280538
 MonoBehaviour:
@@ -5671,12 +5751,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879280529}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.41, y: -13.25, z: 0}
+  m_LocalPosition: {x: -16.41, y: -13.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 78
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &879280541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879280529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &914534581
 GameObject:
   m_ObjectHideFlags: 0
@@ -5741,6 +5836,7 @@ GameObject:
   - component: {fileID: 956533926}
   - component: {fileID: 956533925}
   - component: {fileID: 956533931}
+  - component: {fileID: 956533932}
   m_Layer: 8
   m_Name: Gargoyle (6)
   m_TagString: Untagged
@@ -5784,6 +5880,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -5914,6 +6011,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &956533932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956533924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1001 &961565702
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6860,7 +6972,7 @@ GameObject:
   - component: {fileID: 1071488707}
   - component: {fileID: 1071488709}
   - component: {fileID: 1071488710}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6926,7 +7038,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071488706}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -21.5, y: -11.02, z: 0}
+  m_LocalPosition: {x: -21.5, y: -11.25, z: 0}
   m_LocalScale: {x: 9.5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6948,7 +7060,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 904
   surfacePixelSize: 1
-  splashParticke: {fileID: 423477294747854568, guid: a39ec76eb340c4602b8d340baa517d58, type: 3}
+  splashParticke: {fileID: 423477294747854568, guid: bc72dc57222694b1b943aa9ff84478fb, type: 3}
   splashPartickeSmall: {fileID: 423477294747854568, guid: 0397e82667de24af9bba8458e2a6fc65, type: 3}
   surfaceMoveParticke: {fileID: 6610350960147134360, guid: d237657a4a540417b95e35b2d979a197, type: 3}
 --- !u!61 &1071488710
@@ -7107,6 +7219,7 @@ GameObject:
   - component: {fileID: 1100818243}
   - component: {fileID: 1100818249}
   - component: {fileID: 1100818250}
+  - component: {fileID: 1100818251}
   m_Layer: 8
   m_Name: Gargoyle (3)
   m_TagString: Untagged
@@ -7150,6 +7263,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -7298,6 +7412,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &1100818251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100818242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &1116313421
 GameObject:
   m_ObjectHideFlags: 0
@@ -7313,6 +7442,7 @@ GameObject:
   - component: {fileID: 1116313423}
   - component: {fileID: 1116313422}
   - component: {fileID: 1116313428}
+  - component: {fileID: 1116313429}
   m_Layer: 8
   m_Name: Gargoyle (2)
   m_TagString: Untagged
@@ -7356,6 +7486,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -7486,6 +7617,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &1116313429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116313421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &1163517769
 GameObject:
   m_ObjectHideFlags: 0
@@ -20034,6 +20180,7 @@ GameObject:
   - component: {fileID: 1187447324}
   - component: {fileID: 1187447323}
   - component: {fileID: 1187447329}
+  - component: {fileID: 1187447330}
   m_Layer: 8
   m_Name: Gargoyle (8)
   m_TagString: Untagged
@@ -20077,6 +20224,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -20207,6 +20355,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &1187447330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187447322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &1190221932
 GameObject:
   m_ObjectHideFlags: 0
@@ -20820,6 +20983,7 @@ GameObject:
   - component: {fileID: 1226079716}
   - component: {fileID: 1226079715}
   - component: {fileID: 1226079714}
+  - component: {fileID: 1226079717}
   m_Layer: 8
   m_Name: Gargoyle
   m_TagString: Untagged
@@ -20954,6 +21118,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -20979,6 +21144,21 @@ MonoBehaviour:
   colliderBox: {fileID: 0}
   debug: 0
   maxSlopeAngle: 55
+--- !u!114 &1226079717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226079710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &1252812627
 GameObject:
   m_ObjectHideFlags: 0
@@ -21799,6 +21979,7 @@ GameObject:
   - component: {fileID: 1331173315}
   - component: {fileID: 1331173314}
   - component: {fileID: 1331173313}
+  - component: {fileID: 1331173319}
   m_Layer: 8
   m_Name: Gargoyle (13)
   m_TagString: Untagged
@@ -21842,6 +22023,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -21958,6 +22140,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 68
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1331173319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331173312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &1336659978
 GameObject:
   m_ObjectHideFlags: 0
@@ -21973,6 +22170,7 @@ GameObject:
   - component: {fileID: 1336659980}
   - component: {fileID: 1336659979}
   - component: {fileID: 1336659985}
+  - component: {fileID: 1336659986}
   m_Layer: 8
   m_Name: Gargoyle (7)
   m_TagString: Untagged
@@ -22016,6 +22214,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -22146,6 +22345,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &1336659986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336659978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1 &1427272513
 GameObject:
   m_ObjectHideFlags: 0
@@ -41529,6 +41743,7 @@ GameObject:
   - component: {fileID: 2048251907}
   - component: {fileID: 2048251906}
   - component: {fileID: 2048251912}
+  - component: {fileID: 2048251913}
   m_Layer: 8
   m_Name: Gargoyle (1)
   m_TagString: Untagged
@@ -41572,6 +41787,7 @@ MonoBehaviour:
   spriteAnim: {fileID: 0}
   health: {fileID: 0}
   gravity: {fileID: 0}
+  velocity: {fileID: 0}
   cameraBounds: {fileID: 0}
   gm: {fileID: 0}
   player: {fileID: 0}
@@ -41702,6 +41918,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   pushing: 0
+--- !u!114 &2048251913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048251905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b69f7e8b09f4865b5a1ecd8ac0e0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  last: {x: 0, y: 0}
 --- !u!1001 &2071950802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41780,7 +42011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -13.018
+      value: -12.8
       objectReference: {fileID: 0}
     - target: {fileID: 3134492415825782881, guid: 1e4189873344e45debcf9531d7c23853, type: 3}
       propertyPath: m_LocalPosition.z
@@ -41880,14 +42111,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1738902196, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: runSetup
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1738902196, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: bretheUnderwater
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931027, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_Name
       value: Player
@@ -41898,7 +42121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.533438
+      value: -9.158438
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -41935,18 +42158,6 @@ PrefabInstance:
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578839686523931030, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: m_Size.y
-      value: 1.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578839686523931030, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: m_Offset.y
-      value: 0.63
-      objectReference: {fileID: 0}
-    - target: {fileID: 5708913426178384169, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
-      propertyPath: normal.y
-      value: 1.26
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
