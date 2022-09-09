@@ -121,8 +121,8 @@ Shader "Custom/Water with surface"
 				float _myTime = _Time.y + _AddedTime;
 
                 // warp
-                i.uv.x += _AmplitudeX * sin((_myTime * _SpeedX + i.uv.y) * _FrequencyX)/20;
-                i.uv.y += _AmplitudeY * sin((_myTime * _SpeedY + i.uv.y) * _FrequencyY)/20;
+                i.uv.x += _AmplitudeX * sin((_myTime * _SpeedX + i.uvtex.y) * _FrequencyX)/20;
+                i.uv.y += _AmplitudeY * sin((_myTime * _SpeedY + i.uvtex.y) * _FrequencyY)/20;
 
 				fixed4 belowCol = tex2Dproj(_GrabTexture, i.uv);
 				float belowStrength = belowCol.r + belowCol.g + belowCol.b;
