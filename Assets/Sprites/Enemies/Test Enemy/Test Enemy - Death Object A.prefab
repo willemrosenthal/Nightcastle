@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5096634189053462023}
   - component: {fileID: 7469422984511877454}
   - component: {fileID: 2245672167952603136}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Test Enemy - Death Object A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,12 +47,13 @@ MonoBehaviour:
   shake: {x: 0.75, y: 0}
   clip: {fileID: 0}
   life: 0.3
+  dieWhenEmpty: 0
   clipLengthIsLife: 0
   fickerWhenDying: 0
   deathObjects:
   - {fileID: 8936724743193652269, guid: 86d6f833c4d9148929a06782b4ca6edc, type: 3}
-  dieWhenEmpty: 0
   sound: {fileID: 0}
+  sayOnDeath: 
 --- !u!212 &2245672167952603136
 SpriteRenderer:
   m_ObjectHideFlags: 0

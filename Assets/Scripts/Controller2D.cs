@@ -19,10 +19,15 @@ public class Controller2D : RaycastController {
     // gravity direction
     float gravityDir = 1;
 
+    InWater inWater;
+
     public override void Start() {
         base.Start();
 
         CheckForSelfCollision();
+
+        // get inWater
+        inWater = GetComponent<InWater>();
     }
 
     void CheckForSelfCollision () {
@@ -32,8 +37,17 @@ public class Controller2D : RaycastController {
         }
     }
 
+    void WaterMovement(ref Vector2 moveAmount) {
+        if (inWater && inWater.inWater) {
+            moveAmount.x *= inWater.dampenMovementX;
+            moveAmount.y *= inWater.dampenMovementY;
+        }
+    }
 
-    public void Move(Vector2 moveAmount, bool standingOnPlatform = false) {        
+    public void Move(Vector2 moveAmount, bool standingOnPlatform = false) {     
+        // in water
+        WaterMovement(ref moveAmount);
+
         UpdateRaycastOrigins ();
         collisions.Reset ();
         collisions.moveAmountOld = moveAmount;

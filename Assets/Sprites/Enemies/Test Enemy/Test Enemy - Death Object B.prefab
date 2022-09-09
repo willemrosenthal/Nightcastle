@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2383972869465787409}
   - component: {fileID: 14902595056063443}
   - component: {fileID: 6448461178689133865}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,6 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 0
   controller: {fileID: 0}
+  inWater: {fileID: 0}
   snapToGroundOnStart: 0
   initialHangtime: 1
 --- !u!114 &2379655773555045993
@@ -169,6 +170,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   colliderBox: {fileID: 0}
+  debug: 0
   maxSlopeAngle: 55
 --- !u!114 &14902595056063443
 MonoBehaviour:
@@ -183,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkCollisionWithPlayer: 0
+  pushable: 0
   controller: {fileID: 0}
   sr: {fileID: 0}
   spriteAnim: {fileID: 0}
@@ -206,11 +209,12 @@ MonoBehaviour:
   shake: {x: 0, y: 0}
   clip: {fileID: 0}
   life: 2
-  useClipLengthAsLife: 0
+  dieWhenEmpty: 0
+  clipLengthIsLife: 0
   fickerWhenDying: 1
   deathObjects: []
-  dieWhenEmpty: 0
   sound: {fileID: 0}
+  sayOnDeath: 
 --- !u!1 &1942195439124898188
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +231,7 @@ GameObject:
   - component: {fileID: 6846439094521999368}
   - component: {fileID: 8724865224407755338}
   - component: {fileID: 2037584526333097245}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,6 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 0
   controller: {fileID: 0}
+  inWater: {fileID: 0}
   snapToGroundOnStart: 0
   initialHangtime: 0.2
 --- !u!114 &1687435312744325396
@@ -380,6 +385,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   colliderBox: {fileID: 0}
+  debug: 0
   maxSlopeAngle: 55
 --- !u!114 &8724865224407755338
 MonoBehaviour:
@@ -394,6 +400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkCollisionWithPlayer: 0
+  pushable: 0
   controller: {fileID: 0}
   sr: {fileID: 0}
   spriteAnim: {fileID: 0}
@@ -417,11 +424,12 @@ MonoBehaviour:
   shake: {x: 0, y: 0}
   clip: {fileID: 0}
   life: 2
-  useClipLengthAsLife: 0
+  dieWhenEmpty: 0
+  clipLengthIsLife: 0
   fickerWhenDying: 1
   deathObjects: []
-  dieWhenEmpty: 0
   sound: {fileID: 0}
+  sayOnDeath: 
 --- !u!1 &4376619494649393344
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,7 +446,7 @@ GameObject:
   - component: {fileID: 2797761100272162483}
   - component: {fileID: 1913983073277187301}
   - component: {fileID: 1599445031083889974}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,6 +558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 0
   controller: {fileID: 0}
+  inWater: {fileID: 0}
   snapToGroundOnStart: 0
   initialHangtime: 0.3
 --- !u!114 &7348695784947636681
@@ -591,6 +600,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   colliderBox: {fileID: 0}
+  debug: 0
   maxSlopeAngle: 55
 --- !u!114 &1913983073277187301
 MonoBehaviour:
@@ -605,6 +615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkCollisionWithPlayer: 0
+  pushable: 0
   controller: {fileID: 0}
   sr: {fileID: 0}
   spriteAnim: {fileID: 0}
@@ -628,11 +639,12 @@ MonoBehaviour:
   shake: {x: 0, y: 0}
   clip: {fileID: 0}
   life: 2
-  useClipLengthAsLife: 0
+  dieWhenEmpty: 0
+  clipLengthIsLife: 0
   fickerWhenDying: 1
   deathObjects: []
-  dieWhenEmpty: 0
   sound: {fileID: 0}
+  sayOnDeath: 
 --- !u!1 &7246156227555650826
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,7 +661,7 @@ GameObject:
   - component: {fileID: 5715766921046667131}
   - component: {fileID: 6908576992845666237}
   - component: {fileID: 6897842255755522544}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -761,6 +773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 0
   controller: {fileID: 0}
+  inWater: {fileID: 0}
   snapToGroundOnStart: 0
   initialHangtime: 0.3
 --- !u!114 &8111828638377700206
@@ -802,6 +815,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   colliderBox: {fileID: 0}
+  debug: 0
   maxSlopeAngle: 55
 --- !u!114 &6908576992845666237
 MonoBehaviour:
@@ -816,6 +830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkCollisionWithPlayer: 0
+  pushable: 0
   controller: {fileID: 0}
   sr: {fileID: 0}
   spriteAnim: {fileID: 0}
@@ -839,11 +854,12 @@ MonoBehaviour:
   shake: {x: 0, y: 0}
   clip: {fileID: 0}
   life: 2
-  useClipLengthAsLife: 0
+  dieWhenEmpty: 0
+  clipLengthIsLife: 0
   fickerWhenDying: 1
   deathObjects: []
-  dieWhenEmpty: 0
   sound: {fileID: 0}
+  sayOnDeath: 
 --- !u!1 &7908124533325718318
 GameObject:
   m_ObjectHideFlags: 0
@@ -860,7 +876,7 @@ GameObject:
   - component: {fileID: 4160462082247020023}
   - component: {fileID: 6885764164615568967}
   - component: {fileID: 5164071548225730320}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: thighs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -972,6 +988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 0
   controller: {fileID: 0}
+  inWater: {fileID: 0}
   snapToGroundOnStart: 0
   initialHangtime: 0.1
 --- !u!114 &5925001792012307336
@@ -1013,6 +1030,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   colliderBox: {fileID: 0}
+  debug: 0
   maxSlopeAngle: 55
 --- !u!114 &6885764164615568967
 MonoBehaviour:
@@ -1027,6 +1045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkCollisionWithPlayer: 0
+  pushable: 0
   controller: {fileID: 0}
   sr: {fileID: 0}
   spriteAnim: {fileID: 0}
@@ -1050,11 +1069,12 @@ MonoBehaviour:
   shake: {x: 0, y: 0}
   clip: {fileID: 0}
   life: 2
-  useClipLengthAsLife: 0
+  dieWhenEmpty: 0
+  clipLengthIsLife: 0
   fickerWhenDying: 1
   deathObjects: []
-  dieWhenEmpty: 0
   sound: {fileID: 0}
+  sayOnDeath: 
 --- !u!1 &8936724743193652269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,7 +1085,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5096634189053462023}
   - component: {fileID: 7469422984511877454}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Test Enemy - Death Object B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1106,8 +1126,9 @@ MonoBehaviour:
   shake: {x: 0, y: 0}
   clip: {fileID: 0}
   life: 0
-  useClipLengthAsLife: 0
+  dieWhenEmpty: 1
+  clipLengthIsLife: 0
   fickerWhenDying: 0
   deathObjects: []
-  dieWhenEmpty: 1
   sound: {fileID: 0}
+  sayOnDeath: 

@@ -9,11 +9,19 @@ public class Water : MonoBehaviour {
     Vector2 scale;
     Bounds bounds;
 
-    public SpriteRenderer sr;
-    public BoxCollider2D boxCollider2D;
+    float minSurfaceDist = 0.2f;
+    public GameObject splashParticke;
+    public GameObject splashPartickeSmall;
+    public GameObject surfaceMoveParticke;
+
+    SpriteRenderer sr;
+    BoxCollider2D boxCollider2D;
 
 
     HashSet<Transform> inWater = new HashSet<Transform>();
+    HashSet<Transform> onSurface = new HashSet<Transform>();
+    Dictionary<Transform, Vector2> onSurfacePos = new Dictionary<Transform, Vector2>();
+    Dictionary<Transform, InWater> inWaterDictionary = new Dictionary<Transform, InWater>();
 
     void Start() {
         sr = GetComponent<SpriteRenderer>();
@@ -37,11 +45,25 @@ public class Water : MonoBehaviour {
         }
 
         // use a raycastall that casts along it's entire length to get all objects touching the surface.
+        HashSet<Transform> onSurfaceNow = new HashSet<Transform>();
         RaycastHit2D[] surfaceObjs = Physics2D.RaycastAll(transform.position, Vector2.right, bounds.size.x, collisionMask);
         Debug.DrawRay(transform.position, Vector2.right * bounds.size.x, Color.red);
         foreach (RaycastHit2D hit in surfaceObjs) {
-            if (hit.transform == Player.Instance.transform) {
-                Debug.Log("PLAYER ON SURFACE!");
+            onSurfaceNow.Add(hit.transform);
+            if (!onSurface.Contains(hit.transform)) {
+                // just entered surface
+                SpawnSurfaceSplash(new Vector2(hit.transform.position.x, transform.position.y));
+                onSurface.Add(hit.transform);
+            }
+            Vector2 point = new Vector2(hit.transform.position.x, hit.point.y);
+            if (!onSurfacePos.ContainsKey(hit.transform)) {
+                onSurfacePos.Add(hit.transform, point);
+            }
+            else {
+                if (Vector2.Distance(onSurfacePos[hit.transform], point) > minSurfaceDist) {
+                    onSurfacePos[hit.transform] = point;
+                    Instantiate(surfaceMoveParticke, point, Quaternion.identity);
+                }
             }
         }
 
@@ -58,24 +80,87 @@ public class Water : MonoBehaviour {
             if (!inWater.Contains(col.transform)) {
                 Debug.Log(col.transform.name + " ENTERD THE WATER");
                 inWater.Add(col.transform);
+                //if (onSurfaceNow.Contains(col.transform)) Instantiate(splashParticke, new Vector2(col.transform.position.x, transform.position.y), Quaternion.identity);
                 if (col.transform == Player.Instance.transform) {
                     Debug.Log("PLAYER IN WATER!");
                 }
+                // adds in water component
+                if (!inWaterDictionary.ContainsKey(col.transform))  {
+                    inWaterDictionary.Add(col.transform, col.transform.GetComponent<InWater>());
+                }
+                UpdateInWater(col.transform, true);
             }
         }
 
-        // duplicate inWater becaseu you cant remove elements from a hashset while itterating though it
-        HashSet<Transform> inWaterCopy = new HashSet<Transform>(inWater);
-        foreach (Transform t in inWaterCopy) {
+        // // duplicate inWater becaseu you cant remove elements from a hashset while itterating though it
+        // HashSet<Transform> inWaterCopy = new HashSet<Transform>(inWater);
+        // foreach (Transform t in inWaterCopy) {
+        //     // if it's gone, remove it
+        //     if (!t) {
+        //         inWater.Remove(t);
+        //         if (onSurfacePos.ContainsKey(t)) onSurfacePos.Remove(t); // remove it from surface dictionary
+        //     }
+        //     // if it lives, but its not in the water
+        //     else if (!inWaterNow.Contains(t)) {
+        //         inWater.Remove(t); // remove it
+        //         if (onSurfacePos.ContainsKey(t)) onSurfacePos.Remove(t); // remove it from surface dictionary
+        //         Debug.Log(t.name +  " has left the water!");
+        //         UpdateInWater(t, false); // turn off inwater
+        //         // splash
+        //         SpawnSurfaceSplash(new Vector2(t.position.x, transform.position.y));
+        //     }
+        // }
+        RemoveEntriesNotInBoth(inWater, inWaterNow, "inWater");
+        RemoveEntriesNotInBoth(onSurface, onSurfaceNow, "onSurface");
+    }
+
+    void RemoveEntriesNotInBoth(HashSet<Transform> removeFrom, HashSet<Transform> checkAginast, string type = "") {
+        HashSet<Transform> copy = new HashSet<Transform>(removeFrom);
+        foreach (Transform t in copy) {
             // if it's gone, remove it
-            if (!t) {
-                inWater.Remove(t);
+            if (t == null) {
+                removeFrom.Remove(t);
+                RemoveDeadCallback(t, type);
             }
             // if it lives, but its not in the water
-            else if (!inWaterNow.Contains(t)) {
-                inWater.Remove(t); // remove it
-                Debug.Log(t.name +  " has left the water!");
+            else if (!checkAginast.Contains(t)) {
+                removeFrom.Remove(t); // remove it
+                RemoveMissingCallback(t, type);
             }
+        }
+    }
+
+    void RemoveDeadCallback(Transform t, string type = "") {
+        if (type == "inWater") {
+            if (onSurfacePos.ContainsKey(t)) onSurfacePos.Remove(t);
+        }
+    }
+    void RemoveMissingCallback(Transform t, string type = "") {
+        if (type == "inWater") {
+            if (onSurfacePos.ContainsKey(t)) onSurfacePos.Remove(t); // remove it from surface dictionary
+            Debug.Log(t.name +  " has left the water!");
+            UpdateInWater(t, false); // turn off inwater
+            // splash
+            SpawnSurfaceSplash(new Vector2(t.position.x, transform.position.y));
+        }
+        if (type == "onSurface") {
+            SpawnSurfaceSplashSmall(new Vector2(t.position.x, transform.position.y));
+        }
+    }
+ 
+    void SpawnSurfaceSplash( Vector2 point ) {
+        Instantiate(splashParticke, point, Quaternion.identity);
+    } 
+ 
+    void SpawnSurfaceSplashSmall( Vector2 point ) {
+        Instantiate(splashPartickeSmall, point, Quaternion.identity);
+    } 
+
+    void UpdateInWater(Transform t, bool turnON) {
+        InWater w = inWaterDictionary[t];
+        if (w) {
+            w.inWater = turnON;
+            w.water = transform;
         }
     }
 

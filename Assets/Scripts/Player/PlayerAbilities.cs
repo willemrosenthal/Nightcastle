@@ -13,4 +13,23 @@ public class PlayerAbilities : MonoBehaviour {
     public bool mouse; // turn into a mouse (or rat) - toggle from spell
     public bool senseEvil; // could be an item
     public bool telepathy; // toggle that affects talking
+
+    public bool runSetup = false;
+
+    void Start() {
+       
+    }
+
+    void Setup() {
+        InWater inWater = GetComponent<InWater>();
+        if (!bretheUnderwater) inWater.boyant = true;
+        else inWater.boyant = false;
+    }
+
+    void Update() {
+        if (runSetup) {
+            runSetup = false;
+            Setup();
+        }
+    }
 }

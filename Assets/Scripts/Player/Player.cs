@@ -101,6 +101,7 @@ public class Player : MonoBehaviour {
     SpriteRenderer sr;
     SpriteAnim anim;
     Attack attack;
+    InWater inWater;
 
     void Awake() {
         // singleton and if a duplicate, end code here
@@ -124,7 +125,8 @@ public class Player : MonoBehaviour {
         state = GetComponent<State>();
         anim = GetComponent<SpriteAnim>();
         abilities = GetComponent<PlayerAbilities>();  
-        attack = GetComponent<Attack>();      
+        attack = GetComponent<Attack>();     
+        inWater = GetComponent<InWater>(); 
     }
 
     void Singleton () {
@@ -440,7 +442,12 @@ public class Player : MonoBehaviour {
             gravityMultiplier = floatDownFallReduction;
             if (state.GetState() == "running") gravityMultiplier = floatDownFallRunReduction;
         }
-        velocity.y += gravity * GTime.deltaTime * gravityMultiplier;
+
+        // in water, dampen gravity
+        float inWaterDampen = 1;
+        if (inWater.inWater) inWaterDampen = inWater.dampenGravity;
+
+        velocity.y += gravity * GTime.deltaTime * gravityMultiplier * inWaterDampen;
 
         // coyote
         if (controller.collisions.below) coyoteReady = true;

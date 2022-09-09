@@ -6,12 +6,14 @@ public class Gravity : MonoBehaviour {
     
     [HideInInspector]public float gravity;
     [HideInInspector]public Controller2D controller;
+    public InWater inWater;
     public bool snapToGroundOnStart = false;
     public float initialHangtime = 0;
 
     void Start() {
         gravity = World.gravity;
         controller = GetComponent<Controller2D>();
+        inWater = GetComponent<InWater>();
         Initilize();
     }
 
@@ -31,6 +33,11 @@ public class Gravity : MonoBehaviour {
         if (controller.collisions.above || controller.collisions.below) {
             velocity.y = 0;
         }
-        velocity.y += gravity * GTime.deltaTime;
+
+        // in water, dampen gravity
+        float inWaterDampen = 1;
+        if (inWater && inWater.inWater) inWaterDampen = inWater.dampenGravity;
+
+        velocity.y += gravity * GTime.deltaTime * inWaterDampen;
     }
 }
