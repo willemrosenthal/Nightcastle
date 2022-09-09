@@ -68,6 +68,8 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _Effect: 0.65
+    - _ExpandSufaceLitPixelSize: 0.007
+    - _FGWaterTopIntencity: 1.33
     - _FrequencyX: 46
     - _FrequencyY: 15
     - _GlossMapScale: 1

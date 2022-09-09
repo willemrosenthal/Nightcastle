@@ -28,6 +28,8 @@ Shader "Custom/Water with surface"
 		_FrequencyY ("Frequency Y", Range(0, 50)) = 0.1
 		_AmplitudeY ("Amplitude Y", Range(0, 2)) = 0.1
 		_SpeedY ("SpeedY", Range(0, 2)) = 0.1
+
+		_ExpandSufaceLitPixelSize ("xPixelRelativeSize", Range(0, 0.02)) = 0.01
 	}
 
 	SubShader
@@ -110,6 +112,7 @@ Shader "Custom/Water with surface"
             float _SpeedY;
 			float _AddedTime;
 
+			float _ExpandSufaceLitPixelSize;
  
 			fixed4 frag (v2f i) : SV_Target
 			{
@@ -124,8 +127,16 @@ Shader "Custom/Water with surface"
 				fixed4 belowCol = tex2Dproj(_GrabTexture, i.uv);
 				float belowStrength = belowCol.r + belowCol.g + belowCol.b;
 
+				float4 uvPXOffset = float4(_ExpandSufaceLitPixelSize, 0, 0, 0);
+
+				fixed4 belowColLeft = tex2Dproj(_GrabTexture, i.uv - uvPXOffset);
+				float belowStrengthLeft = belowColLeft.r + belowColLeft.g + belowColLeft.b;
+
+				fixed4 belowColRight = tex2Dproj(_GrabTexture, i.uv + uvPXOffset);
+				float belowStrengthRight = belowColRight.r + belowColRight.g + belowColRight.b;
+
                 if (i.uvtex.y > _SufaceCutoff) { 
-					if (belowStrength > _SufaceBrightnessCutoff) {
+					if (belowStrength > _SufaceBrightnessCutoff || belowStrengthLeft > _SufaceBrightnessCutoff || belowStrengthRight > _SufaceBrightnessCutoff) {
                 		//i.uv.x += _AmplitudeX * 3 * sin((_myTime * _SpeedX + i.uv.y) * _FrequencyX)/20;
 						//belowCol = tex2Dproj(_GrabTexture, i.uv);
 						float4 surfaceAdd = _SurfaceColor * _FGWaterTopIntencity;// * belowStrength * 0.5; // * 0.5;
