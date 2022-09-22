@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+
+    public static MonoBehaviour Instance  { get; private set; }
+
     public Transform target; // will be CameraMan // cameraman should follow the players's center point by default.
 
     // where camera should be
@@ -17,13 +20,25 @@ public class CameraFollow : MonoBehaviour
     GameManager gm;
 
     void Awake() {
+        Singleton();
+		if (Instance != this) return;
+
         gm = GameManager.Instance;
         gm.cameraFollow = this;
+        cameraBounds = GetComponent<CameraBounds>();
+        GameManager.Instance.cameraBounds = cameraBounds;
     }
 
-    void Start() {
-        cameraBounds = GetComponent<CameraBounds>();
-    }
+    void Singleton () {
+		if (Instance == null) {
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else {
+			Destroy (gameObject);
+		}
+	}
+
 
     public void CameraUpdate() {
         // makes sure bounds are up to date

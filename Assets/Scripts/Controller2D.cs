@@ -246,6 +246,8 @@ public class Controller2D : RaycastController {
         if (hit && hit.collider.tag != "Cloud") {
             moveAmount.y = (hit.distance - skinWidth);
             collisions.above = true;
+            collisions.aboveHitNormal = hit.normal;
+            
             if (collisions.below) {
                 moveAmount.x = 0;
             }
@@ -307,6 +309,7 @@ public class Controller2D : RaycastController {
             if (useFlatCollisions) {
                 moveAmount.y = hit.distance - skinWidth;
                 collisions.above = true;
+                collisions.aboveHitNormal = hit.normal;
                 if (collisions.below) {
                     moveAmount.x = 0;
                 }
@@ -579,6 +582,8 @@ public class Controller2D : RaycastController {
         public bool descendingSlope; // do i need?
         public bool slidingDownMaxSlope;
 
+        public Vector2 aboveHitNormal;
+
         public float slopeAngle, slopeAngleOld;
         public Vector2 slopeNormal;
         public Vector2 moveAmountOld;
@@ -603,6 +608,8 @@ public class Controller2D : RaycastController {
             slidingDownMaxSlope = false;
             slopeNormal = Vector2.zero;
             onSlope = false;
+
+            aboveHitNormal = Vector2.zero;
 
             slopeAngleOld = slopeAngle;
             slopeAngle = 0;

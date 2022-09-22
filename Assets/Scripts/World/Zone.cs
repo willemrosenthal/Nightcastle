@@ -109,15 +109,6 @@ public class Zone : MonoBehaviour {
         }
     }
 
-    void OnDrawGizmos() {
-        if (!Application.isPlaying) {
-            BuildBounds();
-            ConstrainBoundsToCam ();
-            SnapToGrid();
-        }
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(bounds.center, bounds.size);
-    }
 
     void ConstrainBoundsToCam () {
         if (bounds.size.y < camHeight) {
@@ -148,4 +139,67 @@ public class Zone : MonoBehaviour {
         public Enemy enemy;
         public Vector2 spawnPoint;
     }
+
+    [HideInInspector] public Color zoneColor;
+    void OnDrawGizmos() {
+
+        if (!Application.isPlaying) {
+            GetZoneColor();
+            BuildBounds();
+            ConstrainBoundsToCam ();
+            SnapToGrid();
+        }
+
+        Gizmos.color = zoneColor;
+        Gizmos.DrawWireCube(bounds.center, bounds.size);
+        
+        Gizmos.DrawWireSphere(bounds.min, 0.75f);
+        Gizmos.DrawWireSphere(new Vector2(bounds.min.x, bounds.max.y), 0.75f);
+        Gizmos.DrawWireSphere(bounds.max, 0.75f);
+        Gizmos.DrawWireSphere(new Vector2(bounds.max.x, bounds.min.y), 0.75f);
+
+        Gizmos.DrawSphere(bounds.min, 0.3f);
+        Gizmos.DrawSphere(new Vector2(bounds.min.x, bounds.max.y), 0.3f);
+        Gizmos.DrawSphere(bounds.max, 0.3f);
+        Gizmos.DrawSphere(new Vector2(bounds.max.x, bounds.min.y), 0.3f);
+    }
+
+    void OnDrawGizmosSelected() {   
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube(bounds.center, bounds.size + Vector3.one * 0.02f);
+
+        Gizmos.DrawWireSphere(bounds.min, 0.76f);
+        Gizmos.DrawWireSphere(new Vector2(bounds.min.x, bounds.max.y), 0.76f);
+        Gizmos.DrawWireSphere(bounds.max, 0.76f);
+        Gizmos.DrawWireSphere(new Vector2(bounds.max.x, bounds.min.y), 0.76f);
+
+        Gizmos.DrawSphere(bounds.min, 0.20f);
+        Gizmos.DrawSphere(new Vector2(bounds.min.x, bounds.max.y), 0.20f);
+        Gizmos.DrawSphere(bounds.max, 0.20f);
+        Gizmos.DrawSphere(new Vector2(bounds.max.x, bounds.min.y), 0.20f);
+    }
+
+    void GetZoneColor() {
+        Random.InitState(transform.GetInstanceID());
+        zoneColor = new Color(Random.value, Random.value, Random.value);
+        //gets a more intense random color
+        float zeroOutVal = Random.value;
+        if (Random.value < 0.33) {
+            zoneColor.r *= 0.25f;
+            if (Random.value < 0.5f) zoneColor.g *= 2;
+            else zoneColor.b *= 2;
+        }
+        else if (Random.value < 0.66) {
+            zoneColor.g *= 0.25f;
+            if (Random.value < 0.5f) zoneColor.r *= 2;
+            else zoneColor.b *= 2;
+        }
+        else {
+            zoneColor.b *= 0.25f;
+            if (Random.value < 0.5f) zoneColor.r *= 2;
+            else zoneColor.g *= 2;
+        }
+
+    }
+
 }

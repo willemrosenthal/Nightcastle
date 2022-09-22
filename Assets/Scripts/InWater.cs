@@ -68,6 +68,13 @@ public class InWater : MonoBehaviour {
                     velocity.y += boyantVelocity;
                 }
                 jumpOk = true;
+
+                // zero out boyant velocity if you hit your head
+                if (controller.collisions.above) {
+                    boyantVelocity = 0;
+                    // if you are hitting your head, use above hit normal to propell the player away from that
+                    velocity.x = controller.collisions.aboveHitNormal.x;
+                }
             }
             // othewrise, no boyant velocity and think about weather jumping is ok
             else {
