@@ -8,11 +8,11 @@ public class InWater : MonoBehaviour {
     public float dampenMovementX = 0.65f;
     public float dampenMovementY = 0.5f;
 
-    public float _dampenGravity = 0.3f;
+    public float _dampenGravity = 0.4f; // 0.3f
     public float dampenGravity {
         get {
             if (boyant && controller && floating) return _dampenGravity * 0.5f;
-            if (controller && bounds.min.y < water.position.y) return 1;
+            if (controller && bounds.min.y > water.position.y) return 1;
             return _dampenGravity;
         }
         set {
@@ -43,12 +43,13 @@ public class InWater : MonoBehaviour {
     public void Update() {
         jumpOk = false;
         floating = false;
-        // NEED TO CANCEL OUT Y VELOCITY
+
+        // update bounds position
+         if (inWater && controller) {
+            bounds = controller.colliderBox.bounds;
+         }
 
         if (inWater && boyant && controller) {
-            // update bounds center
-             bounds = controller.colliderBox.bounds;
-
              float depth = water.position.y - (bounds.center.y + ySwimPointAdjust);
 
             // if propperly submerged
