@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Debug/Scene1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 15369666b944f49cd99c2e15c902b34e
+  - enabled: 1
+    path: Assets/Scenes/Shore.unity
+    guid: 9a6ce55b9898a4e9b83eb840f3ec1506
   m_configObjects: {}

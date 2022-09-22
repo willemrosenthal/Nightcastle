@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-50)]
 public class GameManager : MonoBehaviour {
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour {
 
     // current zone
     Zone currentZone;
+    Scene currentScene;
 
     // refs
     [HideInInspector] public GameSettings settings;
@@ -50,9 +52,16 @@ public class GameManager : MonoBehaviour {
     // zone
     public void SetCurrentZone(Zone zone) {
         currentZone = zone;
+        currentScene = zone.gameObject.scene;
     }
     public Zone GetCurrentZone() {
         return currentZone;
+    }
+    public Scene GetCurrentScene() {
+        return currentScene;
+    }
+    public string GetCurrentSceneName() {
+        return currentScene.name;
     }
 
     void ConfigureQuality() {

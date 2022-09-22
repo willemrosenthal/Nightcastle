@@ -158,7 +158,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 70
   height: 13
-  zoneColor: {r: 1.6382542, g: 0.792789, b: 0.19583443, a: 1}
+  zoneColor: {r: 0.09079502, g: 0.55650085, b: 1.4107741, a: 1}
 --- !u!4 &45152848
 Transform:
   m_ObjectHideFlags: 0
@@ -172,6 +172,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1585806349}
   m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &45814049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 45814051}
+  - component: {fileID: 45814050}
+  m_Layer: 0
+  m_Name: Loading Zone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &45814050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45814049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1cdac8d8ef9e4d69ac32265d0adc30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toScene: Town
+  width: 15
+  height: 12
+--- !u!4 &45814051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45814049}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 96.07243, y: -1.9507427, z: 1574.0918}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1585806349}
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &83557356
 GameObject:
@@ -208,7 +254,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 10
   height: 16
-  zoneColor: {r: 0.3007758, g: 0.23564139, b: 1.4991988, a: 1}
+  zoneColor: {r: 0.3444232, g: 0.05421681, b: 0.3070152, a: 1}
 --- !u!4 &83557358
 Transform:
   m_ObjectHideFlags: 0
@@ -258,7 +304,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 70
   height: 13
-  zoneColor: {r: 0.79800117, g: 1.3029705, b: 0.1653177, a: 1}
+  zoneColor: {r: 0.20810473, g: 0.47949988, b: 0.68078953, a: 1}
 --- !u!4 &107284237
 Transform:
   m_ObjectHideFlags: 0
@@ -784,6 +830,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1961507791}
   lookPos: {x: 0, y: 0}
+  currentZone: 
   zoneBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -941,7 +988,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 20
   height: 13
-  zoneColor: {r: 0.9949596, g: 0.0041093235, b: 0.7189222, a: 1}
+  zoneColor: {r: 0.19940487, g: 1.772418, b: 0.1358413, a: 1}
 --- !u!4 &723609843
 Transform:
   m_ObjectHideFlags: 0
@@ -1432,7 +1479,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 10
   height: 6.5
-  zoneColor: {r: 0.14682351, g: 0.90947485, b: 0.4016381, a: 1}
+  zoneColor: {r: 0.4534027, g: 0.110069856, b: 1.7583568, a: 1}
 --- !u!4 &1103975859
 Transform:
   m_ObjectHideFlags: 0
@@ -4160,7 +4207,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 70
   height: 40
-  zoneColor: {r: 1.9848485, g: 0.82159746, b: 0.17735048, a: 1}
+  zoneColor: {r: 0.73941404, g: 0.14299329, b: 0.43621403, a: 1}
 --- !u!4 &1366835599
 Transform:
   m_ObjectHideFlags: 0
@@ -4325,7 +4372,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 70
   height: 40
-  zoneColor: {r: 0.4885785, g: 0.009043545, b: 1.315307, a: 1}
+  zoneColor: {r: 0.20401633, g: 0.98566306, b: 1.9395084, a: 1}
 --- !u!1 &1500238395
 GameObject:
   m_ObjectHideFlags: 0
@@ -74075,6 +74122,7 @@ Transform:
   - {fileID: 1103975859}
   - {fileID: 45152848}
   - {fileID: 350806996}
+  - {fileID: 45814051}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -74261,7 +74309,7 @@ MonoBehaviour:
     m_Bits: 896
   width: 17
   height: 8
-  zoneColor: {r: 0.14557956, g: 0.43992132, b: 0.9159771, a: 1}
+  zoneColor: {r: 0.6599522, g: 0.11803742, b: 1.889281, a: 1}
 --- !u!4 &1675660645
 Transform:
   m_ObjectHideFlags: 0
@@ -74633,11 +74681,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.2521875
+      value: 131.74782
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 4.75
       objectReference: {fileID: 0}
     - target: {fileID: 1578839686523931029, guid: 4384728f766cc4b6fab0d6e53fb93c9c, type: 3}
       propertyPath: m_LocalPosition.z

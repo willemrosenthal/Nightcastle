@@ -91,7 +91,7 @@ public class Zone : MonoBehaviour {
         for (int i = 0; i < zoneObjectCache.Count; i++) {
             // enable enemy if it is an enemy
             if (zoneObjectCache[i].enemy) zoneObjectCache[i].enemy.enabled = true;
-            GameObject obj = Instantiate(zoneObjectCache[i].obj, zoneObjectCache[i].spawnPoint, Quaternion.identity );
+            GameObject obj = Instantiate(zoneObjectCache[i].obj, zoneObjectCache[i].spawnPoint, Quaternion.identity, transform.parent );
             // re-disable the cached enemy (if it is an enemy)
             if (zoneObjectCache[i].enemy) zoneObjectCache[i].enemy.enabled = false;
             // add object to current zone objects

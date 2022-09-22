@@ -13,7 +13,7 @@ public class CameraFollow : MonoBehaviour
     public Vector2 lookPos;
 
     // bounds to constrain camera
-    Zone currentZone;
+    public string currentZone;
     public Bounds zoneBounds;
     
     CameraBounds cameraBounds;
@@ -88,6 +88,7 @@ public class CameraFollow : MonoBehaviour
     }
 
     public void SetZoneBounds(Zone zone) {
+        currentZone = zone.name;
         zoneBounds = zone.GetBounds();
     }
 

@@ -60,9 +60,6 @@ public class Controller2D : RaycastController {
             ReverseGravityOrigins();
         }
 
-        
-        Debug.Log("wasOnCloud:" + collisions.wasOnCloud);
-
         if (moveAmount.x != 0) { // handles clouds
             SolidBlockHorizontalCollisions(ref moveAmount);
             HorizontalCollisions (ref moveAmount);
@@ -109,8 +106,11 @@ public class Controller2D : RaycastController {
             boundsSize = raycastOrigins.bounds.size;
             boundsSize.y *=  0.75f;
 
+            // NEW: REMOVED THIS - leavig this in allowed you to crouch, then move forwad though angled blocks
             // dont bother doing this check if the bounds is too small
-            if (boundsSize.y < 0.75f) return;
+            //if (boundsSize.y < 0.75f) {
+            //    return;
+            //}
             
             
             /* // debug, draw collider
