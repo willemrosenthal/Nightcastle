@@ -182,8 +182,8 @@ public class Controller2D : RaycastController {
         RaycastHit2D hit = Raycast(raycastOrigins.bottom, Vector2.right * directionX, rayLength, collisionMask);
 
         if (hit) {
-            if (hit.distance == 0 || hit.collider.tag == "Cloud") return;
             float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
+            if (hit.distance == 0 || (hit.collider.tag == "Cloud" && slopeAngle > maxSlopeAngle)) return; // NEW: (hit.collider.tag == "Cloud" && slopeAngle > maxSlopeAngle) <-- to let you climb cloud slopes
             // climbing slope
             if (slopeAngle > 0 && slopeAngle <= maxSlopeAngle) {
                 float distToSlopeStart = 0;
@@ -345,7 +345,6 @@ public class Controller2D : RaycastController {
             // dont collide with cloud if inside the collider
             if ((hit.distance == 0 || collisions.fallThoughCloudOk > 0) && hit.collider.tag == "Cloud") return;
 
-            // continue if inside a collider, or collider is a cloud
             float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
 
             if (slopeAngle <= maxSlopeAngle) {
