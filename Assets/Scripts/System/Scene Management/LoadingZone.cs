@@ -5,7 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class LoadingZone : MonoBehaviour
 {
+    public Transform levelContent;
     public string toScene;
+    public string id;
     public float width;
     public float height;
     Bounds bounds;
@@ -14,16 +16,27 @@ public class LoadingZone : MonoBehaviour
 
     Player player;
     GameManager gm;
+    LoadingZoneConnector zoneConnector;
+
+    void Awake() {
+        if (levelContent == null) levelContent = transform.parent;
+
+        // get zone connector
+        zoneConnector = LoadingZoneConnector.Instance;
+        ConnectZones();
+    }
 
     void Start() {
+        // get the zone connector again since the first one loaded may not have an instance
+        zoneConnector = LoadingZoneConnector.Instance;
         gm = GameManager.Instance;
         player = Player.Instance;
         BuildBounds();
     }
 
     void BuildBounds() {
-        bounds.size = new Vector2(width, height);
-        bounds.center = (Vector2)transform.position + (Vector2)bounds.size * 0.5f;
+        bounds.size = new Vector2(Mathf.Abs(width), height);
+        bounds.center = (Vector2)transform.position + new Vector2(width, height) * 0.5f;
     }
 
     void LateUpdate() {
@@ -39,12 +52,25 @@ public class LoadingZone : MonoBehaviour
         }
     }
 
+    void ConnectZones() {
+        if (zoneConnector.triggeredID == id && zoneConnector.triggeredScene == gameObject.scene.name) {
+            Vector2 spaceDiff = zoneConnector.triggredZone.position - transform.position;
+            levelContent.transform.position += (Vector3)spaceDiff;
+        }
+    }
+
     void EnterZone() {
         inLoadingZone = true;
         // asyn load scene
         if (!SceneManager.GetSceneByName(toScene).isLoaded) {
+            zoneConnector.triggeredID = id;
+            zoneConnector.triggeredScene = toScene;
+            zoneConnector.triggredZone = transform;
             SceneManager.LoadSceneAsync(toScene, LoadSceneMode.Additive);
-        } else Debug.Log("scene: " + toScene + "  is alrady loaded");
+        }
+        else {
+            Debug.Log("scene: " + toScene + "  is alrady loaded");
+        }
     }
 
     void ExitZone() {
