@@ -339,7 +339,7 @@ public class Controller2D : RaycastController {
         Vector2 rayOrigin = raycastOrigins.bottom + Vector2.right * moveAmount.x;// + Vector2.up * moveAmount.y;
 
         // shoot ray down from bottom center
-        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask);
+        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask, true);
 
         if (hit) {
             // dont collide with cloud if inside the collider
@@ -557,10 +557,11 @@ public class Controller2D : RaycastController {
         Debug.DrawLine(point + Vector2.up * size * 0.5f, point + Vector2.down * size * 0.5f, color, time);
     }
 
-    public RaycastHit2D Raycast(Vector2 rayOrigin, Vector2 rayDir, float rayLength, LayerMask _collisionMask) {
-        if (useRacastAll) {
+    public RaycastHit2D Raycast(Vector2 rayOrigin, Vector2 rayDir, float rayLength, LayerMask _collisionMask, bool ignoreZeroDistClouds = false) {
+        if (useRacastAll || ignoreZeroDistClouds) {
             RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDir, rayLength, _collisionMask);
             for (int i = 0; i < hits.Length; i++) {
+                if (ignoreZeroDistClouds && hits[i].transform.tag == "Cloud" && hits[i].distance == 0) continue;
                 if (hits[i].collider != colliderBox) return hits[i];
             }
             return new RaycastHit2D();
