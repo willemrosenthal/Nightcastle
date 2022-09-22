@@ -477,7 +477,7 @@ public class Player : MonoBehaviour {
         regrabTimer -= GTime.deltaTime;
 
         // wallsliding should be calculated AFTER gravity
-        if (abilities.wallGrab && (controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && regrabTimer < 0) {
+        if (abilities.wallGrab && (controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && regrabTimer < 0 && !state.CheckState("hurt")) {
             
             // if all other conditions are met, try to wall grab
             if (state.GetState() != "wallGrab") {
