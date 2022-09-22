@@ -183,6 +183,7 @@ public class Player : MonoBehaviour {
         HandleHurt();
         HandleRun();
         HandleCasting();
+        ClimCloudSlopes();
 
         if (FallHard ()) {
             return;
@@ -200,6 +201,10 @@ public class Player : MonoBehaviour {
         if (health.IsInvincible() && state.GetState() != "hurt") {
             sr.enabled = !sr.enabled;
         } else sr.enabled = true;
+    }
+
+    void ClimCloudSlopes() {
+        if (directionalInput.y > 0) controller.collisions.climbCloudSlope = true;
     }
 
     void SlidingDownSlope() {
