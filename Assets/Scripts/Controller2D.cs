@@ -189,7 +189,9 @@ public class Controller2D : RaycastController {
             float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
             if (hit.distance == 0 || (hit.collider.tag == "Cloud" && slopeAngle > maxSlopeAngle)) return; // NEW: (hit.collider.tag == "Cloud" && slopeAngle > maxSlopeAngle) <-- to let you climb cloud slopes
             
-            if (!collisions.wasOnCloud && collisions.wasGrounded && hit.collider.tag == "Cloud" && !collisions.climbCloudSlope) {
+            // UNRELIABLE!
+            //Debug.Log(collisions.wasOnSlope);
+            if ((!collisions.wasOnCloud || !collisions.wasOnSlope) && collisions.wasGrounded && hit.collider.tag == "Cloud" && !collisions.climbCloudSlope) {
                 return;
             }
 
@@ -205,7 +207,7 @@ public class Controller2D : RaycastController {
                     //Debug.Log("happened");
                     //Debug.Break();
                 }
-                ClimbSlope(ref moveAmount, slopeAngle, hit.normal);
+                ClimbSlope(ref moveAmount, slopeAngle, hit.normal, hit);
                 moveAmount.x += distToSlopeStart * directionX;
 
                 // make sure we are skin width above the surface
@@ -219,7 +221,7 @@ public class Controller2D : RaycastController {
         }
     }
 
-    void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal) {
+    void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal, RaycastHit2D hit) {
         float moveDistance = Mathf.Abs(moveAmount.x);
         float climbmoveAmountY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
 
@@ -351,7 +353,7 @@ public class Controller2D : RaycastController {
         Vector2 rayOrigin = raycastOrigins.bottom + Vector2.right * moveAmount.x;// + Vector2.up * moveAmount.y;
 
         // shoot ray down from bottom center
-        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask, true);
+        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask, true, true);
 
         if (hit) {
             // dont collide with cloud if inside the collider
@@ -571,12 +573,13 @@ public class Controller2D : RaycastController {
         Debug.DrawLine(point + Vector2.up * size * 0.5f, point + Vector2.down * size * 0.5f, color, time);
     }
 
-    public RaycastHit2D Raycast(Vector2 rayOrigin, Vector2 rayDir, float rayLength, LayerMask _collisionMask, bool ignoreZeroDistClouds = false) {
+    public RaycastHit2D Raycast(Vector2 rayOrigin, Vector2 rayDir, float rayLength, LayerMask _collisionMask, bool ignoreZeroDistClouds = false, bool ignoreSlopedCloudsWithSkinWidthDistWhenNotOnSlope = false) {
         if (useRacastAll || ignoreZeroDistClouds) {
             RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDir, rayLength, _collisionMask);
             for (int i = 0; i < hits.Length; i++) {
                 if (hits[i].transform.tag == "Cloud") {
                     if (ignoreZeroDistClouds && hits[i].distance == 0) continue;
+                    if (ignoreSlopedCloudsWithSkinWidthDistWhenNotOnSlope && hits[i].distance < skinWidth && !collisions.onSlope && !collisions.wasOnSlope && hits[0].normal != Vector2.up) continue;
                     if (collisions.wasGrounded && !collisions.wasOnCloud && !collisions.climbCloudSlope) continue;
                 }
                 if (hits[i].collider != colliderBox) return hits[i];
@@ -605,6 +608,8 @@ public class Controller2D : RaycastController {
         public bool wasOnCloud;
         public bool climbCloudSlope;
 
+        public bool wasOnSlope;
+
         public float slopeAngle, slopeAngleOld;
         public Vector2 slopeNormal;
         public Vector2 moveAmountOld;
@@ -628,6 +633,8 @@ public class Controller2D : RaycastController {
             descendingSlope = false;
             slidingDownMaxSlope = false;
             slopeNormal = Vector2.zero;
+
+            wasOnSlope = onSlope;
             onSlope = false;
 
             wasOnCloud = onCloud;

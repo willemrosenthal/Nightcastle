@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Cloud
   - Enemy
+  - Cloud - down only
   layers:
   - Default
   - TransparentFX

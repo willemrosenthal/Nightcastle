@@ -7,6 +7,7 @@ public class CameraBottom : MonoBehaviour
     public Vector2 offsetBeginPoint;
 
     public bool useTop = false;
+    public bool onlyWhenPlayerAbove;
 
     Vector3 finalOffsetPos;
     Vector2 worldBeginPt;
@@ -14,8 +15,10 @@ public class CameraBottom : MonoBehaviour
     float rightX;
 
     CameraBounds cameraBounds;
+    Player player;
 
     void Start() {
+        player = Player.Instance;
         cameraBounds = GameManager.Instance.cameraBounds;
 
         worldBeginPt = (Vector2)transform.position + offsetBeginPoint;
@@ -27,6 +30,7 @@ public class CameraBottom : MonoBehaviour
     }
 
     void LateUpdate() {
+        if (onlyWhenPlayerAbove && ((player.transform.position.y <= transform.position.y && !useTop) || (player.transform.position.y >= transform.position.y && useTop))) return;
         // check if right or left:
             // if offsetBeginPoint.x < 0 then use right side of cam else use left side
             // CamRegisterPt = the lower right or lower left point on the camera.
