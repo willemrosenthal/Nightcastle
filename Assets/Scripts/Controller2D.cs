@@ -189,10 +189,27 @@ public class Controller2D : RaycastController {
             float slopeAngle = Vector2.Angle (hit.normal, Dir(Vector2.up));
             if (hit.distance == 0 || (hit.collider.tag == "Cloud" && slopeAngle > maxSlopeAngle)) return; // NEW: (hit.collider.tag == "Cloud" && slopeAngle > maxSlopeAngle) <-- to let you climb cloud slopes
             
+
+            // NEW WAY TO HANDLE THIS
+            // if collisions.climbCloudSlope is off, then cast multiple rays and use the one that hits either the first non-cloud, or the the farthest away cloud.
+
+
             // UNRELIABLE!
             //Debug.Log(collisions.wasOnSlope);
             if ((!collisions.wasOnCloud || !collisions.wasOnSlope) && collisions.wasGrounded && hit.collider.tag == "Cloud" && !collisions.climbCloudSlope) {
-                return;
+                // shoots a ray down to make sure the flat ground continues.
+                if (slopeAngle > 0) {
+                    bool flatGroundBelow = LookForLowerFlatCloudGround(raycastOrigins.bottom + moveAmount.x * Vector2.right, Vector2.down, skinWidth, collisionMask);
+                    if (flatGroundBelow) {
+                        Debug.Log("flat ground below found");
+                        return;
+                    }
+                    Debug.Log("NO GROUND found");
+                }
+                else {
+                    Debug.Log("ELSE");
+                    return;
+                }
             }
 
             // only clim slope if already on a cloud, or if holding up
@@ -207,7 +224,7 @@ public class Controller2D : RaycastController {
                     //Debug.Log("happened");
                     //Debug.Break();
                 }
-                ClimbSlope(ref moveAmount, slopeAngle, hit.normal, hit);
+                ClimbSlope(ref moveAmount, slopeAngle, hit.normal);
                 moveAmount.x += distToSlopeStart * directionX;
 
                 // make sure we are skin width above the surface
@@ -221,7 +238,18 @@ public class Controller2D : RaycastController {
         }
     }
 
-    void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal, RaycastHit2D hit) {
+    bool LookForLowerFlatCloudGround(Vector2 rayOrigin, Vector2 rayDir, float rayLength, LayerMask _collisionMask) {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDir, rayLength, _collisionMask);
+        for (int i = 0; i < hits.Length; i++) {
+            if (hits[i].transform.tag == "Cloud") {
+                if (hits[i].distance != 0 && hits[i].normal == Vector2.up) return true;
+            }
+            else return true;
+        }
+        return false;
+    }
+
+    void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal) {
         float moveDistance = Mathf.Abs(moveAmount.x);
         float climbmoveAmountY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
 
@@ -353,7 +381,7 @@ public class Controller2D : RaycastController {
         Vector2 rayOrigin = raycastOrigins.bottom + Vector2.right * moveAmount.x;// + Vector2.up * moveAmount.y;
 
         // shoot ray down from bottom center
-        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask, true, true);
+        RaycastHit2D hit = Raycast(rayOrigin, Dir(Vector2.down), rayLength, collisionMask, true, true); // these extra ture, true are NEW - for handling stacked cloud slopes
 
         if (hit) {
             // dont collide with cloud if inside the collider
@@ -579,7 +607,20 @@ public class Controller2D : RaycastController {
             for (int i = 0; i < hits.Length; i++) {
                 if (hits[i].transform.tag == "Cloud") {
                     if (ignoreZeroDistClouds && hits[i].distance == 0) continue;
-                    if (ignoreSlopedCloudsWithSkinWidthDistWhenNotOnSlope && hits[i].distance < skinWidth && !collisions.onSlope && !collisions.wasOnSlope && hits[0].normal != Vector2.up) continue;
+                    // THIS IS SPECIFCALLY FOR THE INSTANCE OF WALKING ON A FLAT CLOUD, AND HACING THE PLAYER CHOOSE TO CONTINUE WALKING FALT PAST A VERTICAL CLOUD SLOPE (UNLESS HOLDING UP)
+                    if (ignoreSlopedCloudsWithSkinWidthDistWhenNotOnSlope && hits[i].distance < skinWidth && !collisions.onSlope && !collisions.wasOnSlope && hits[0].normal != Vector2.up) {
+                        // first make sure there is indeed a ground to hit
+                        bool foundSolidGround = false;
+                        for (int n = 0; i < hits.Length; i++) {
+                            if (n == i) continue;
+                            if (hits[0].normal == Vector2.up) {
+                                foundSolidGround = true;
+                                collisions.onSlope = true;
+                                break;
+                            }
+                        }
+                        if (!foundSolidGround) continue;
+                    }
                     if (collisions.wasGrounded && !collisions.wasOnCloud && !collisions.climbCloudSlope) continue;
                 }
                 if (hits[i].collider != colliderBox) return hits[i];
